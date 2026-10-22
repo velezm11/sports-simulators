@@ -1,4 +1,4 @@
-import {createMatch,applyTransition,resetMatch} from "./match-state.js";
+import {nearFall} from "../rules/nfhs-2026-27.js";import {createMatch,applyTransition,resetMatch} from "./match-state.js";
 const R=document.querySelector("#red"),G=document.querySelector("#green"),L=document.querySelector("#label"),F=document.querySelector("#feedback"),RS=document.querySelector("#redScore"),GS=document.querySelector("#greenScore"),H=document.querySelector("#history"),C=document.querySelector("#lastCall");
 let match=createMatch();
 const labels={neutral:["NEUTRAL","Nobody has control"],"red-control":["RED CONTROL","Red has established control"],"green-control":["GREEN CONTROL","Green has established control"]};
@@ -8,4 +8,5 @@ document.querySelectorAll("[data-state]").forEach(b=>b.onclick=()=>{const before
 document.querySelector("#reset").onclick=()=>{match=resetMatch();F.textContent="Match reset.";render()};
 document.querySelector("#parent").onclick=()=>{const n=document.querySelector("#parentNote");n.hidden=!n.hidden};
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.remove("on"));b.classList.add("on");const h=document.querySelector("#heading"),e=document.querySelector("#explain");if(b.dataset.tab==="learn"){h.textContent="Who has control?";e.textContent="Before learning points, learn the position. In neutral, neither wrestler controls the other."}else if(b.dataset.tab==="practice"){h.textContent="Build the score";e.textContent="Change the position and watch the tested scoring engine build the score and event history."}else{h.textContent="You make the call";e.textContent="Say the call before tapping the next position. Then compare your answer with the score and event history."}});
+document.querySelectorAll("[data-sec]").forEach(b=>b.onclick=()=>{const seconds=Number(b.dataset.sec),result=nearFall({offensiveControl:document.querySelector("#nfControl").checked,pinningSituation:document.querySelector("#nfPinning").checked,criteriaMet:document.querySelector("#nfCriteria").checked,seconds});document.querySelector("#nfResult").textContent=result.points?result.points+" near-fall point"+(result.points===1?"":"s")+" earned.":"0 points — at least one required condition is missing or the count is under 2 seconds."});
 render();
