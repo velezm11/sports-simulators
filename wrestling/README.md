@@ -9,7 +9,6 @@ The repository is structured for multiple sport simulators:
 - `/hockey/`
 - `/soccer/`
 
-`/wrestling/v2/` is retained only as a compatibility redirect to `/wrestling/`.
 
 ## Audience
 Neshaminy Youth Wrestling Club / ICWL families learning folkstyle wrestling.
