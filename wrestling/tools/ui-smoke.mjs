@@ -60,7 +60,9 @@ for(let t=0;t<5;t++){
 // Make the Call: play, answer each option id across questions, next
 ok(await click('.mode[data-mode="call"]')==="ok","call tab");
 for(let q=0;q<7;q++){
+  ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).length>0,"illustrated before-frame q"+q);
   ok(await click("#frames .nav-btn")==="ok","Play the action q"+q);
+  ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).length>0,"illustrated after-frame q"+q);
   ok((await count(".big"))===6,"6 call options q"+q);
   await evalJs(`document.querySelectorAll('.big')[${q%6}].click()`);
   ok((await count(".big.correct"))===1,"correct option highlighted q"+q);

@@ -110,7 +110,7 @@ export const MAKE_THE_CALL=Object.freeze([
   {id:"q-standup",from:"REF_POSITION_RED_TOP",to:"STAND_UP",fromState:"red-control",toState:"red-control",prompt:"Green stands up, but Red still holds Green's belly. What is the call?",answer:"none",why:"Red still has control. Not an escape yet."},
   {id:"q-escape",from:"STAND_UP",to:"ESCAPE_NEUTRAL",fromState:"red-control",toState:"neutral",prompt:"Green breaks free and turns to face Red. What is the call?",answer:"escape",why:"Controlled to neutral. Escape for Green."},
   {id:"q-reversal",from:"SIT_OUT",to:"CONTROL_GREEN",fromState:"red-control",toState:"green-control",prompt:"Green spins out and is on top of Red. What is the call?",answer:"reversal",why:"Controlled straight to control. Reversal for Green."},
-  {id:"q-pin",from:"NEAR_FALL",to:"PIN",fromState:"red-control",toState:"red-control",prompt:"Both of Green's shoulders are down and the ref slaps the mat. What is the call?",answer:"fall",why:"Fall. The match is over."},
+  {id:"q-pin",from:"REF_POSITION_RED_TOP",to:"PIN",fromState:"red-control",toState:"red-control",prompt:"Both of Green's shoulders are down and the ref slaps the mat. What is the call?",answer:"fall",why:"Fall. The match is over."},
   {id:"q-neutral",from:"NEUTRAL",to:"TIE_UP",fromState:"neutral",toState:"neutral",prompt:"They grab each other and push. Points?",answer:"none",why:"Neutral. Touching is not control."}
 ]);
 
