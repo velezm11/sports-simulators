@@ -45,3 +45,7 @@ Serve the repository root with any static HTTP server and open `/wrestling/`.
 - `match-state.js`: `applyTransition`, `applyNearFall`, `applyFall`; the UI never adds points itself.
 - `tools/pose-sheet.html`: contact sheet of every pose for checking body positions (`?f=SHOT,FINISH` to filter).
 - Progress is stored in `localStorage` only (lesson completion and Make the Call tallies). No names, accounts or network calls.
+
+## Art
+
+`art/poses/*.jpg` are full-stage illustrations of the two wrestlers (red and green) generated with Scenario (GPT Image 2.5 Flare) from written position descriptions, then checked against the rig pose sheet for a plausible wrestling position before being listed in `ui/art.js`. Any pose without an entry there (currently `NEAR_FALL`) renders through the rig. Regenerate a pose by editing the prompt in BUILD-LOG, reviewing the result, and adding its anchors to `ui/art.js`.
