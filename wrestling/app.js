@@ -1,4 +1,3 @@
-import {nearFall} from "./rules/nfhs-2026-27.js";
 import {createMatch,applyTransition,resetMatch} from "./match-state.js";
 
 let match=createMatch();
@@ -22,14 +21,13 @@ function setScene(state){
   $("#sceneHint").textContent=map[state][1];
   $("#wrestlingScene").setAttribute("aria-label","Two youth wrestlers demonstrating "+map[state][0].toLowerCase());
 }
-
+function setTeachingState(state){match={...match,state};setScene(state)}
 function renderScore(){
   $("#redScore").textContent=match.red;
   $("#greenScore").textContent=match.green;
   const x=match.history.at(-1);
   $("#lastCall").textContent=x?x.call.toUpperCase()+" +"+x.points:"MATCH READY";
 }
-
 function feedback(title,text,tone="info"){
   const box=$("#feedback");
   box.className="feedback "+tone;
@@ -59,7 +57,7 @@ $$(".lesson").forEach(btn=>btn.addEventListener("click",()=>{
   $("#ruleBadge").textContent=d.badge;
   $("#progressText").textContent=d.n+" of 5";
   $(".progress i").style.width=(d.n*20)+"%";
-  setScene(d.state);
+  setTeachingState(d.state);
   $("#takedownSteps").hidden=btn.dataset.lesson!=="takedown";
   feedback("Watch the position",btn.dataset.lesson==="takedown"?"Use the four steps below. The score appears only after established control.":"Tap the position choices under the mat to see what changes.");
 }));
@@ -67,10 +65,10 @@ $$(".lesson").forEach(btn=>btn.addEventListener("click",()=>{
 $$("[data-step]").forEach(btn=>btn.addEventListener("click",()=>{
   $$("[data-step]").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
   const step=Number(btn.dataset.step);
-  if(step===0){setScene("neutral");feedback("Step 1 — Neutral","Neither wrestler has control. No takedown points yet.");}
-  if(step===1){setScene("neutral");feedback("Step 2 — Attack","Red attacks, but an attack by itself does not score a takedown.");}
-  if(step===2){setScene("red-control");feedback("Step 3 — Finish","The finish is creating control. The scoring moment depends on established control.");}
-  if(step===3){setScene("red-control");feedback("Step 4 — Established control","Takedown: 3 points.","score");}
+  if(step===0){setTeachingState("neutral");feedback("Step 1 — Neutral","Neither wrestler has control. No takedown points yet.");}
+  if(step===1){setTeachingState("neutral");feedback("Step 2 — Attack","Red attacks, but an attack by itself does not score a takedown.");}
+  if(step===2){setTeachingState("red-control");feedback("Step 3 — Finish","The finish is creating control. The scoring moment depends on established control.");}
+  if(step===3){setTeachingState("red-control");feedback("Step 4 — Established control","Takedown: 3 points.","score");}
 }));
 
 $("#parentMode").addEventListener("click",()=>{$("#parentNote").hidden=!$("#parentNote").hidden});
