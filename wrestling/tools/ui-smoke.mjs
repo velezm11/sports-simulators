@@ -32,7 +32,7 @@ for(const l of lessons){
     ok((await evalJs(`document.querySelectorAll('.film.active').length`))===1,"one active film "+l+" "+i);
     ok((await text("#caption")).length>10,"caption present "+l+" "+i);
     ok((await count("#stage image, #stage .wrestler"))>0,"stage drawn "+l+" "+i);
-    ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).length>0||l==="nearfall","illustration used in "+l+" "+i);
+    ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).length>0,"illustration used in "+l+" "+i);
   }
   await evalJs(`document.querySelectorAll('.film')[0].click()`);
   ok((await evalJs(`document.querySelector('.film-nav .nav-btn.secondary').disabled`))===true,"Back disabled on first frame "+l);
@@ -44,7 +44,7 @@ await evalJs(`location.hash='#learn/takedown/5'`);await sleep(300);
 ok((await text("#redScore"))==="3","takedown lesson scoreboard red 3, got "+await text("#redScore"));
 await evalJs(`location.hash='#learn/fall/2'`);await sleep(300);
 ok((await text("#greenScore"))==="6"&&(await text("#lastCall")).includes("FALL"),"fall lesson preset 0-6 and fall shown");
-await evalJs(`location.hash='#learn/nearfall/3'`);await sleep(300);
+await evalJs(`location.hash='#learn/nearfall/2'`);await sleep(300);
 ok((await text("#redScore"))==="2","near fall lesson awards 2 for a 2 count, got "+await text("#redScore"));
 
 // Practice: every choice on every task
@@ -59,7 +59,7 @@ for(let t=0;t<5;t++){
 }
 // Make the Call: play, answer each option id across questions, next
 ok(await click('.mode[data-mode="call"]')==="ok","call tab");
-for(let q=0;q<8;q++){
+for(let q=0;q<7;q++){
   ok(await click("#frames .nav-btn")==="ok","Play the action q"+q);
   ok((await count(".big"))===6,"6 call options q"+q);
   await evalJs(`document.querySelectorAll('.big')[${q%6}].click()`);

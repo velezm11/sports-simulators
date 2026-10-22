@@ -82,8 +82,7 @@ export const LESSONS=Object.freeze([
     id:"nearfall",group:"scoring",n:9,title:"Near fall",kid:"Back near the mat? The ref counts.",
     frames:[
       {pose:"REF_POSITION_RED_TOP",state:"red-control",controller:"red",caption:"Step 1. Red is on top and in control.",thumb:"Red on top",coach:"Near fall needs control first.",signal:"Wrestler in control (signal 11)"},
-      {pose:"NEAR_FALL",state:"red-control",controller:"red",caption:"Step 2. Red turns Green over. Green's back is near the mat. The ref counts: 1... 2...",thumb:"Ref counts",coach:"Near-fall criteria must be met and held for at least 2 seconds. The count alone never scores; control plus criteria plus time does.",signal:"Near fall (signal 21)",badge:"COUNT 1... 2...",badgeTone:"warn"},
-      {pose:"REF_POSITION_RED_TOP",state:"red-control",controller:"red",caption:"Step 3. Green gets back to the belly. The count is over. Red gets near fall points.",thumb:"Points!",coach:"Points are awarded when the near-fall situation ends. Only one near fall per pinning situation.",signal:"Awarding points (signal 22)",nearFall:{seconds:2,wrestler:"red"}}
+      {pose:"REF_POSITION_RED_TOP",state:"red-control",controller:"red",caption:"Step 2. Red turned Green's back toward the mat and the ref counted 1... 2... Green gets back to the belly. Red gets near fall points.",thumb:"Points!",coach:"Points are awarded when the near-fall situation ends. Only one near fall per pinning situation.",signal:"Awarding points (signal 22)",nearFall:{seconds:2,wrestler:"red"}}
     ],
     source:"S1, engine",status:"verified",rule:"Near fall: control, pinning situation, criteria met, 2 or more seconds. Scored once when the situation ends."
   },
@@ -111,7 +110,6 @@ export const MAKE_THE_CALL=Object.freeze([
   {id:"q-standup",from:"REF_POSITION_RED_TOP",to:"STAND_UP",fromState:"red-control",toState:"red-control",prompt:"Green stands up, but Red still holds Green's belly. What is the call?",answer:"none",why:"Red still has control. Not an escape yet."},
   {id:"q-escape",from:"STAND_UP",to:"ESCAPE_NEUTRAL",fromState:"red-control",toState:"neutral",prompt:"Green breaks free and turns to face Red. What is the call?",answer:"escape",why:"Controlled to neutral. Escape for Green."},
   {id:"q-reversal",from:"SIT_OUT",to:"CONTROL_GREEN",fromState:"red-control",toState:"green-control",prompt:"Green spins out and is on top of Red. What is the call?",answer:"reversal",why:"Controlled straight to control. Reversal for Green."},
-  {id:"q-nf-count",from:"REF_POSITION_RED_TOP",to:"NEAR_FALL",fromState:"red-control",toState:"red-control",prompt:"Red turns Green over. The ref is counting 1... 2... Points right now?",answer:"nearfall-wait",why:"Keep counting. Near-fall points are awarded when the situation ends, not during the count."},
   {id:"q-pin",from:"NEAR_FALL",to:"PIN",fromState:"red-control",toState:"red-control",prompt:"Both of Green's shoulders are down and the ref slaps the mat. What is the call?",answer:"fall",why:"Fall. The match is over."},
   {id:"q-neutral",from:"NEUTRAL",to:"TIE_UP",fromState:"neutral",toState:"neutral",prompt:"They grab each other and push. Points?",answer:"none",why:"Neutral. Touching is not control."}
 ]);
