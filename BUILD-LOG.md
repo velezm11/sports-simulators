@@ -38,3 +38,11 @@ The `actions/deploy-pages` run on `main` was rejected: the `github-pages` enviro
 - 11 lessons shipped (Foundation 1-5, Basic scoring 6-10, Technical fall). Match basics 12-15 and the penalty block wait on the rules record.
 - `match-state.js` gained near fall, fall and technical fall handling; regression tests cover prerequisite gates, 2/3/4-second boundaries, criteria not met, ownership, match-ending states and the 15-point margin.
 - Mobile checked through a 390px iframe: single column, 2x2 mode tabs, 48px minimum targets.
+
+## 2026-10-22 Kid-first visual pass
+
+- Miguel sent a reference mock (photoreal kids, coach mascot, filmstrip, giant answer buttons) and asked for better than that at a young child's reading level.
+- Generated 11 full-stage illustrations of the same two kids (red/black headgear, green/white headgear) in every position except near fall with Scenario's GPT Image 2.5 Flare, using the first neutral render as the identity reference for the rest. Each was reviewed against the rig pose: shot, finish, control, referee's position, stand-up, escape, sit-out, pin all read correctly; the first near-fall render did not show back exposure clearly and the free plan's 50-action cap stopped a redo, so near fall still uses the rig. `ui/art.js` lists the approved images and the tag/control-marker anchors; `scene.js` falls back to the rig for anything not listed.
+- Learn: filmstrip of every step with thumbnail, arrow and 2-word label; a coach avatar speaks the step in a bubble; "What's happening?" card gives the one-sentence kid version. Lesson rail shows a picture per lesson.
+- Practice, Make the Call and Score a Match use large solid-color answer buttons with an icon and label (color is never the only cue).
+- Copy rewritten for a 6-year-old listener: "Both kids are standing up. Nobody is winning yet."

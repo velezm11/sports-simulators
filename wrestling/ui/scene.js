@@ -1,6 +1,7 @@
 // Composes the stage: gym backdrop, mat, wrestlers, and overlays.
 import {drawWrestler,WRESTLERS} from "./figures.js";
 import * as POSES from "./poses.js";
+import {ART} from "./art.js";
 
 const NS="http://www.w3.org/2000/svg";
 function el(name,attrs,children){
@@ -71,6 +72,14 @@ export function renderStage(svg,frame){
   const pose=POSES[frame.pose];
   if(!pose)throw new Error("Unknown pose "+frame.pose);
   svg.appendChild(defs());
+  const art=ART[frame.pose];
+  if(art){
+    svg.appendChild(el("image",{href:art.src,x:0,y:0,width:900,height:500,preserveAspectRatio:"xMidYMid slice"}));
+    tag(svg,art.red,WRESTLERS.red);tag(svg,art.green,WRESTLERS.green);
+    if(frame.controller)controlMarker(svg,art[frame.controller][0],art[frame.controller][1]-30);
+    if(frame.badge)badge(svg,frame.badge,frame.badgeTone);
+    return;
+  }
   svg.appendChild(backdrop());
   svg.appendChild(mat());
   // wrestlers are authored at a small scale; enlarge the whole layer around the mat centre
@@ -88,18 +97,28 @@ export function renderStage(svg,frame){
   if(frame.controller){
     const p=pose[frame.controller];
     const sx=v=>450+(v-450)*1.3,sy=v=>404+(v-404)*1.3;
-    const x=sx(p.head[0]),y=sy(Math.min(p.head[1],p.hip[1]))-62;
-    const g=el("g",{class:"control-marker"});
-    g.appendChild(el("path",{d:`M ${x-14} ${y} L ${x} ${y+12} L ${x+14} ${y} Z`,fill:"#fbbf24"}));
-    g.appendChild(el("rect",{x:x-52,y:y-26,width:104,height:24,rx:12,fill:"#fbbf24"}));
-    g.appendChild(text(x,y-9,"IN CONTROL",{"text-anchor":"middle","font-size":12,"font-weight":900,fill:"#1f2937","font-family":"Inter,system-ui,sans-serif","letter-spacing":".08em"}));
-    svg.appendChild(g);
+    controlMarker(svg,sx(p.head[0]),sy(Math.min(p.head[1],p.hip[1]))-62);
   }
-  if(frame.badge){
-    const g=el("g",{class:"stage-badge"});
-    g.appendChild(el("rect",{x:20,y:20,width:14+frame.badge.length*11,height:34,rx:17,fill:frame.badgeTone==="score"?"#16a34a":frame.badgeTone==="warn"?"#f59e0b":"#0f172a",opacity:.95}));
-    g.appendChild(text(27,43,frame.badge,{"font-size":15,"font-weight":900,fill:"#fff","font-family":"Inter,system-ui,sans-serif","letter-spacing":".06em"}));
-    svg.appendChild(g);
-  }
+  if(frame.badge)badge(svg,frame.badge,frame.badgeTone);
+}
+function tag(svg,at,c){
+  if(!at)return;
+  const g=el("g",{class:"tag"});
+  g.appendChild(el("rect",{x:at[0]-34,y:at[1]-14,width:68,height:28,rx:14,fill:c.singlet,stroke:"#fff","stroke-width":3}));
+  g.appendChild(text(at[0],at[1]+5,c.label,{"text-anchor":"middle","font-size":14,"font-weight":900,fill:"#fff","font-family":"Inter,system-ui,sans-serif","letter-spacing":".06em"}));
+  svg.appendChild(g);
+}
+function controlMarker(svg,x,y){
+  const g=el("g",{class:"control-marker"});
+  g.appendChild(el("path",{d:`M ${x-14} ${y} L ${x} ${y+12} L ${x+14} ${y} Z`,fill:"#fbbf24"}));
+  g.appendChild(el("rect",{x:x-52,y:y-26,width:104,height:24,rx:12,fill:"#fbbf24"}));
+  g.appendChild(text(x,y-9,"IN CONTROL",{"text-anchor":"middle","font-size":12,"font-weight":900,fill:"#1f2937","font-family":"Inter,system-ui,sans-serif","letter-spacing":".08em"}));
+  svg.appendChild(g);
+}
+function badge(svg,label,tone){
+  const g=el("g",{class:"stage-badge"});
+  g.appendChild(el("rect",{x:20,y:20,width:14+label.length*11,height:34,rx:17,fill:tone==="score"?"#16a34a":tone==="warn"?"#f59e0b":"#0f172a",opacity:.95}));
+  g.appendChild(text(27,43,label,{"font-size":15,"font-weight":900,fill:"#fff","font-family":"Inter,system-ui,sans-serif","letter-spacing":".06em"}));
+  svg.appendChild(g);
 }
 export const POSE_NAMES=Object.keys(POSES);

@@ -2,6 +2,7 @@ import {createMatch,applyTransition,applyNearFall,applyFall,resetMatch,RULESET} 
 import {transitionScore} from "./rules/nfhs-2026-27.js";
 import {renderStage} from "./ui/scene.js";
 import {GROUPS,LESSONS,MAKE_THE_CALL,CALL_OPTIONS} from "./ui/lessons.js";
+import {ART} from "./ui/art.js";
 
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
@@ -31,6 +32,20 @@ let practice={target:null};
 const lesson=()=>LESSONS.find(l=>l.id===lessonId);
 
 // ---------- rendering helpers ----------
+function thumbFor(frame,cls){
+  const art=ART[frame.pose];
+  if(art){const img=document.createElement("img");img.className=cls||"thumb";img.src=art.src;img.alt="";img.loading="lazy";return img;}
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("viewBox","0 0 900 500");svg.setAttribute("class",cls||"thumb");svg.setAttribute("aria-hidden","true");
+  renderStage(svg,{pose:frame.pose,controller:frame.controller});
+  return svg;
+}
+function renderHappening(frame,textHtml){
+  const box=$("#happening");box.innerHTML="";
+  box.appendChild(thumbFor(frame));
+  const p=document.createElement("p");p.innerHTML=textHtml;box.appendChild(p);
+}
+const STATE_KID={neutral:"<b>Neutral.</b> Both kids are up. Nobody is winning yet.","red-control":"<b>Red is in control.</b> Red is on top and Green is down.","green-control":"<b>Green is in control.</b> Green is on top and Red is down."};
 function setStateChip(state){
   const m=STATE_META[state];
   const chip=$("#stateChip");
@@ -47,7 +62,7 @@ function feedback(title,text,tone){
   const box=$("#feedback");
   if(!title){box.hidden=true;return;}
   box.hidden=false;
-  box.className="feedback"+(tone?" "+tone:"");
+  box.className="feedback"+(tone==="score"?" fb-score":tone?" "+tone:"");
   box.innerHTML='<span class="fb-ico" aria-hidden="true">'+(tone==="score"?"+":tone==="warn"?"!":"i")+'</span><div><b></b><p></p></div>';
   box.querySelector("b").textContent=title;
   box.querySelector("p").textContent=text;
@@ -85,8 +100,9 @@ function renderRail(){
       const b=document.createElement("button");
       b.className="lesson"+(l.id===lessonId?" active":"")+(progress.lessons[l.id]?" is-done":"");
       b.dataset.lesson=l.id;b.setAttribute("aria-current",l.id===lessonId?"true":"false");
-      b.innerHTML='<span class="num"></span><div><b></b><small></small></div><span class="done" aria-label="done">✓</span>';
-      b.querySelector(".num").textContent=l.n;b.querySelector("b").textContent=l.title;b.querySelector("small").textContent=l.kid;
+      b.innerHTML='<span class="ico-wrap"></span><div><b></b><small></small></div><span class="done" aria-label="done">✓</span>';
+      b.querySelector(".ico-wrap").replaceWith(thumbFor(l.frames.at(-1),"thumb-ico"));
+      b.querySelector("b").textContent=l.n+". "+l.title;b.querySelector("small").textContent=l.kid;
       b.addEventListener("click",()=>{lessonId=l.id;frameIndex=0;match=createMatch();render();});
       list.appendChild(b);
     });
@@ -115,20 +131,25 @@ function renderLearn(){
   setStateChip(f.state);setSignal(f.signal);
   $("#caption").textContent=f.caption;
   const frames=$("#frames");frames.innerHTML="";
-  const prev=document.createElement("button");prev.className="nav-btn secondary";prev.textContent="Back";prev.disabled=frameIndex===0;prev.addEventListener("click",()=>{frameIndex--;render();});
-  frames.appendChild(prev);
+  const strip=document.createElement("div");strip.className="filmstrip";
   l.frames.forEach((fr,i)=>{
-    const b=document.createElement("button");
     const pts=fr.score?pointsFor(fr.score.call):fr.nearFall?S.nearFall[fr.nearFall.seconds]:0;
-    b.className="step"+(i===frameIndex?" active":"")+(pts||fr.ends?" scored":"");
+    const b=document.createElement("button");
+    b.className="film"+(i===frameIndex?" active":"")+(pts||fr.ends?" scored":"");
     b.setAttribute("aria-pressed",i===frameIndex?"true":"false");
-    b.innerHTML="<span></span><div><b></b><small></small></div>";
-    b.querySelector("span").textContent=i+1;
-    b.querySelector("b").textContent=fr.ends?"Match over":pts?"+"+pts+" "+(fr.score?CALL_LABEL[fr.score.call]:"Near fall"):fr.controller?STATE_META[fr.state].label.split(" ")[0]+" controls":"No points";
-    b.querySelector("small").textContent=fr.signal.replace(/\s*\(.*\)/,"");
+    b.appendChild(thumbFor(fr));
+    const lab=document.createElement("div");lab.className="film-label";lab.innerHTML="<span></span><em></em>";
+    lab.querySelector("span").textContent=i+1;lab.querySelector("em").textContent=fr.thumb||"";lab.querySelector("em").style.fontStyle="normal";
+    b.appendChild(lab);
+    if(pts){const pill=document.createElement("span");pill.className="pts";pill.textContent="+"+pts;b.appendChild(pill);}
+    if(fr.ends){const pill=document.createElement("span");pill.className="pts";pill.textContent="WIN";b.appendChild(pill);}
     b.addEventListener("click",()=>{frameIndex=i;render();});
-    frames.appendChild(b);
+    strip.appendChild(b);
+    if(i<l.frames.length-1){const ar=document.createElement("span");ar.className="film-arrow";ar.setAttribute("aria-hidden","true");ar.textContent="→";strip.appendChild(ar);}
   });
+  frames.appendChild(strip);
+  const nav=document.createElement("div");nav.className="film-nav";
+  const prev=document.createElement("button");prev.className="nav-btn secondary";prev.textContent="Back";prev.disabled=frameIndex===0;prev.addEventListener("click",()=>{frameIndex--;render();});
   const next=document.createElement("button");next.className="nav-btn";
   const lastFrame=frameIndex===l.frames.length-1;
   next.textContent=lastFrame?"Next lesson":"Next step";
@@ -137,10 +158,11 @@ function renderLearn(){
     else frameIndex++;
     render();
   });
-  frames.appendChild(next);
+  nav.appendChild(prev);nav.appendChild(next);frames.appendChild(nav);
+  renderHappening(f,(f.controller?STATE_KID[f.state]:STATE_KID.neutral)+(scored?" <b>+"+scored+" for "+(f.score?f.score.wrestler:f.nearFall.wrestler).toUpperCase()+"!</b>":f.ends?" <b>Match over!</b>":""));
   $("#actions").innerHTML="";
   if(lastFrame){progress.lessons[l.id]=true;saveProgress();}
-  if(scored)feedback((f.score?f.score.wrestler:f.nearFall.wrestler).toUpperCase()+" scores "+scored,(f.score?CALL_LABEL[f.score.call]:"Near fall")+": "+f.coach,"score");
+  if(scored)feedback((f.score?f.score.wrestler:f.nearFall.wrestler).toUpperCase()+" scores "+scored,f.coach,"score");
   else if(f.ends)feedback("Match over",f.coach,"score");
   else feedback(f.controller?STATE_META[f.state].label.split(" ")[0]+" has control, no points":"No points here",f.coach);
   $("#coachText").textContent=f.coach;
@@ -166,13 +188,14 @@ function renderPractice(){
   setStateChip(match.state);setSignal(m.controller?"Wrestler in control (signal 11)":"Neutral position (signal 8)");
   $("#caption").textContent=t.ask;
   $("#frames").innerHTML="";
-  const a=$("#actions");a.innerHTML='<p class="prompt">Pick the next position</p><div class="choice-grid"></div>';
-  const grid=a.querySelector(".choice-grid");
+  const a=$("#actions");a.innerHTML='<div class="big-grid"></div>';
+  const grid=a.querySelector(".big-grid");
+  renderHappening({pose:m.pose,controller:m.controller},STATE_KID[match.state]);
   Object.entries(STATE_META).forEach(([state,meta])=>{
-    const b=document.createElement("button");b.className="choice "+meta.cls;
+    const b=document.createElement("button");b.className="big "+(meta.cls==="neutral"?"gray":meta.cls);
     b.innerHTML='<span class="ico" aria-hidden="true"></span><div><b></b><small></small></div>';
     b.querySelector(".ico").textContent=meta.cls==="neutral"?"N":meta.cls==="red"?"R":"G";
-    b.querySelector("b").textContent=meta.label.charAt(0)+meta.label.slice(1).toLowerCase();
+    b.querySelector("b").textContent=meta.cls==="neutral"?"Both up":meta.cls==="red"?"Red on top":"Green on top";
     b.querySelector("small").textContent=meta.hint;
     b.disabled=!!practice.target;
     if(practice.target){if(state===t.want)b.classList.add("correct");else if(state===practice.target)b.classList.add("wrong");}
@@ -206,21 +229,22 @@ function renderCall(){
   const ctrl=STATE_META[state].controller;
   stage({pose:showTo?q.to:q.from,controller:ctrl,badge:showTo?"WHAT IS THE CALL?":"BEFORE",badgeTone:showTo?"warn":undefined},"Wrestlers "+(showTo?"after":"before")+" the action: "+q.prompt);
   setStateChip(state);setSignal(quiz.answered?(q.answer==="none"?"Indicates no control (signal 9)":q.answer==="fall"?"Stopping the match (signal 2)":q.answer==="nearfall-wait"?"Near fall (signal 21)":"Awarding points (signal 22)"):"Referee is watching");
-  $("#caption").textContent=showTo?q.prompt:"Start position. Press Play to see what happens.";
+  $("#caption").textContent=showTo?q.prompt:"Here is the start. Press Play to see what happens!";
+  renderHappening({pose:showTo?q.to:q.from,controller:ctrl},STATE_KID[state]);
   const fr=$("#frames");fr.innerHTML="";
   if(!showTo){const p=document.createElement("button");p.className="nav-btn";p.textContent="Play the action";p.addEventListener("click",()=>{quiz.revealed=true;render();});fr.appendChild(p);}
   else{const r=document.createElement("button");r.className="nav-btn secondary";r.textContent="Show start";r.addEventListener("click",()=>{quiz.revealed=false;render();});fr.appendChild(r);
     if(!quiz.answered){const p=document.createElement("button");p.className="nav-btn secondary";p.textContent="Show finish";p.disabled=true;fr.appendChild(p);}}
   const a=$("#actions");a.innerHTML="";
   if(showTo){
-    a.innerHTML='<p class="prompt">Your call</p><div class="choice-grid"></div>';
-    const grid=a.querySelector(".choice-grid");
+    a.innerHTML='<div class="big-grid"></div>';
+    const grid=a.querySelector(".big-grid");
     CALL_OPTIONS.forEach(o=>{
-      const b=document.createElement("button");b.className="choice";
+      const b=document.createElement("button");b.className="big "+o.tone;
       const pts=pointsFor(o.id);
       b.innerHTML='<span class="ico" aria-hidden="true"></span><div><b></b><small></small></div>';
       b.querySelector(".ico").textContent=o.icon;b.querySelector("b").textContent=o.label;
-      b.querySelector("small").textContent=pts?"+"+pts+" points":o.id==="fall"?"Match over":o.id==="nearfall-wait"?"Points when it ends":"Nothing changes";
+      b.querySelector("small").textContent=pts?"+"+pts+" points":o.sub;
       b.disabled=quiz.answered;
       if(quiz.answered){if(o.id===q.answer)b.classList.add("correct");else if(o.id===quiz.picked)b.classList.add("wrong");}
       b.addEventListener("click",()=>{
@@ -258,17 +282,18 @@ function renderMatch(){
   const mirrored=nfPending&&m.controller==="green";
   stage({pose:mirrored?"NEAR_FALL":poseName,controller:m.controller,badge:match.ended?(match.ended.reason==="fall"?"FALL":"TECHNICAL FALL"):nfPending?"NEAR FALL COUNT":undefined,badgeTone:match.ended?"score":nfPending?"warn":undefined},"Match position: "+m.label.toLowerCase());
   setStateChip(match.state);setSignal(match.ended?"Stopping the match (signal 2)":nfPending?"Near fall (signal 21)":m.controller?"Wrestler in control (signal 11)":"Neutral position (signal 8)");
-  $("#caption").textContent=match.ended?(match.ended.winner.toUpperCase()+" wins by "+(match.ended.reason==="fall"?"fall.":"technical fall ("+match.ended.margin+" point margin).")):nfPending?"The referee is counting. How long were the near-fall criteria held before "+(m.controller==="red"?"Green":"Red")+" got off their back?":"What happened on the mat? Pick the new position, or a near fall / fall while a wrestler is in control.";
+  renderHappening({pose:mirrored?"NEAR_FALL":poseName,controller:m.controller},match.ended?"<b>Match over!</b> "+match.ended.winner.toUpperCase()+" wins.":STATE_KID[match.state]);
+  $("#caption").textContent=match.ended?(match.ended.winner.toUpperCase()+" wins by "+(match.ended.reason==="fall"?"pin!":"technical fall! "+match.ended.margin+" points ahead.")):nfPending?"The ref is counting! How long was "+(m.controller==="red"?"Green":"Red")+"'s back near the mat?":"What happened on the mat? Tap where they are now.";
   $("#frames").innerHTML="";
   const a=$("#actions");a.innerHTML="";
   if(match.ended){const e=document.createElement("div");e.className="ended";e.textContent="Match over · "+match.ended.winner.toUpperCase()+" wins";a.appendChild(e);
     const r=document.createElement("button");r.className="nav-btn";r.textContent="New match";r.addEventListener("click",()=>{match=resetMatch();nfPending=false;feedback();render();});a.appendChild(r);renderMatchGuide();renderScore();return;}
   const wrap=document.createElement("div");wrap.className="match-controls";
   if(nfPending){
-    const g=document.createElement("div");g.className="group";g.innerHTML='<span class="group-title">Referee count</span><div class="choice-grid"></div>';
-    const grid=g.querySelector(".choice-grid");
-    [["Under 2 seconds",1,"No points"],["2 seconds",2,"+"+S.nearFall[2]],["3 seconds",3,"+"+S.nearFall[3]],["4 or more",4,"+"+S.nearFall[4]]].forEach(([lab,sec,sub])=>{
-      const b=document.createElement("button");b.className="choice";b.innerHTML='<span class="ico" aria-hidden="true"></span><div><b></b><small></small></div>';
+    const g=document.createElement("div");g.className="group";g.innerHTML='<span class="group-title">How long did the ref count?</span><div class="big-grid"></div>';
+    const grid=g.querySelector(".big-grid");
+    [["Under 2 seconds",1,"No points","gray"],["2 seconds",2,"+"+S.nearFall[2],"blue"],["3 seconds",3,"+"+S.nearFall[3],"purple"],["4 or more",4,"+"+S.nearFall[4],"green"]].forEach(([lab,sec,sub,tone])=>{
+      const b=document.createElement("button");b.className="big "+tone;b.innerHTML='<span class="ico" aria-hidden="true"></span><div><b></b><small></small></div>';
       b.querySelector(".ico").textContent=sec>=4?"4+":String(sec);b.querySelector("b").textContent=lab;b.querySelector("small").textContent=sub;
       b.addEventListener("click",()=>{const before=match;match=applyNearFall(match,{seconds:sec});nfPending=false;
         const e=match.history.length>before.history.length?match.history.at(-1):null;
@@ -278,14 +303,14 @@ function renderMatch(){
     const c=document.createElement("button");c.className="nav-btn secondary";c.textContent="Cancel";c.addEventListener("click",()=>{nfPending=false;render();});
     wrap.appendChild(g);wrap.appendChild(c);
   } else {
-    const g=document.createElement("div");g.className="group";g.innerHTML='<span class="group-title">Position now</span><div class="choice-grid"></div>';
-    const grid=g.querySelector(".choice-grid");
+    const g=document.createElement("div");g.className="group";g.innerHTML='<span class="group-title">Where are they now?</span><div class="big-grid"></div>';
+    const grid=g.querySelector(".big-grid");
     Object.entries(STATE_META).forEach(([state,meta])=>{
-      const b=document.createElement("button");b.className="choice "+meta.cls;
+      const b=document.createElement("button");b.className="big "+(meta.cls==="neutral"?"gray":meta.cls);
       const res=transitionScore(match.state,state);
       b.innerHTML='<span class="ico" aria-hidden="true"></span><div><b></b><small></small></div>';
       b.querySelector(".ico").textContent=meta.cls==="neutral"?"N":meta.cls==="red"?"R":"G";
-      b.querySelector("b").textContent=meta.label.charAt(0)+meta.label.slice(1).toLowerCase();
+      b.querySelector("b").textContent=meta.cls==="neutral"?"Both up":meta.cls==="red"?"Red on top":"Green on top";
       b.querySelector("small").textContent=state===match.state?"Current position":res.points?CALL_LABEL[res.call]+" +"+res.points:"No points";
       b.disabled=state===match.state;b.setAttribute("aria-pressed",state===match.state?"true":"false");
       b.addEventListener("click",()=>{const before=match;match=applyTransition(match,state);
@@ -295,11 +320,11 @@ function renderMatch(){
     });
     wrap.appendChild(g);
     if(m.controller){
-      const g2=document.createElement("div");g2.className="group";g2.innerHTML='<span class="group-title">'+m.controller.toUpperCase()+' is in control</span><div class="choice-grid"></div>';
-      const grid2=g2.querySelector(".choice-grid");
-      const nf=document.createElement("button");nf.className="choice";nf.innerHTML='<span class="ico" aria-hidden="true">NF</span><div><b>Near fall</b><small>Back exposed, referee counts</small></div>';
+      const g2=document.createElement("div");g2.className="group";g2.innerHTML='<span class="group-title">'+m.controller.toUpperCase()+' is on top. Did this happen?</span><div class="big-grid"></div>';
+      const grid2=g2.querySelector(".big-grid");
+      const nf=document.createElement("button");nf.className="big purple";nf.innerHTML='<span class="ico" aria-hidden="true">1..2</span><div><b>Near fall</b><small>Back near the mat, ref counts</small></div>';
       nf.addEventListener("click",()=>{nfPending=true;feedback();render();});
-      const pin=document.createElement("button");pin.className="choice";pin.innerHTML='<span class="ico" aria-hidden="true">PIN</span><div><b>Fall</b><small>Both shoulders held down</small></div>';
+      const pin=document.createElement("button");pin.className="big red";pin.innerHTML='<span class="ico" aria-hidden="true">PIN</span><div><b>Pin!</b><small>Both shoulders down</small></div>';
       pin.addEventListener("click",()=>{match=applyFall(match);feedback("FALL",match.ended.winner.toUpperCase()+" wins the match by fall.","score");render();});
       grid2.appendChild(nf);grid2.appendChild(pin);wrap.appendChild(g2);
     }
