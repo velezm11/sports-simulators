@@ -46,3 +46,9 @@ The `actions/deploy-pages` run on `main` was rejected: the `github-pages` enviro
 - Learn: filmstrip of every step with thumbnail, arrow and 2-word label; a coach avatar speaks the step in a bubble; "What's happening?" card gives the one-sentence kid version. Lesson rail shows a picture per lesson.
 - Practice, Make the Call and Score a Match use large solid-color answer buttons with an icon and label (color is never the only cue).
 - Copy rewritten for a 6-year-old listener: "Both kids are standing up. Nobody is winning yet."
+
+## 2026-10-22 QA pass (after the kid-first merge)
+
+- Reviewed all 11 illustrations at full size for hand placement, limb anatomy and position accuracy. All read correctly for their step; the only rejected render was the first near fall (bottom wrestler belly-down, a breakdown not a near fall). Near fall still uses the rig until Scenario credits allow a redo; the Score a Match count screen now shows the top-control illustration with a count badge instead of the rig.
+- Removed the Pin/Fall duplication: lesson 5 (Foundation) teaches what a pin is from the referee's position; lesson 10 "Fall beats points" starts from a preset 0-6 scoreboard and shows the fall overriding the score. Sit-out caption corrected to match the picture (Red has lost his grip, Green is not yet behind him).
+- Added `wrestling/tools/ui-smoke.mjs` (`npm run test:ui`): drives headless Chrome over CDP and clicks every lesson, every filmstrip frame, Back/Next, all Practice choices and tasks, all Make the Call plays and answers, every Score a Match button (positions, 4 near-fall counts, pin, tech fall at 15, new match, reset), coach toggle and reset. 233 checks, 0 failures, 0 console errors. Runs in CI as the `ui-smoke` job.

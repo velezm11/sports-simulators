@@ -13,3 +13,13 @@ jobs:
         with:
           node-version: 22
       - run: npm test
+  ui-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: python3 -m http.server 8765 &
+      - run: google-chrome --headless=new --disable-gpu --no-sandbox --remote-debugging-port=9333 about:blank &
+      - run: sleep 3 && npm run test:ui
