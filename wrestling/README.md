@@ -1,7 +1,15 @@
-# Wrestling Simulator v2
+# Wrestling Simulator
 
-## Status
-Merged to `main` as the current kid-first wrestling MVP.
+## Canonical path
+`/wrestling/index.html`
+
+The repository is structured for multiple sport simulators:
+- `/wrestling/`
+- `/bjj/`
+- `/hockey/`
+- `/soccer/`
+
+`/wrestling/v2/` is retained only as a compatibility redirect to `/wrestling/`.
 
 ## Audience
 Neshaminy Youth Wrestling Club / ICWL families learning folkstyle wrestling.
@@ -18,34 +26,10 @@ Neshaminy Youth Wrestling Club / ICWL families learning folkstyle wrestling.
 - Resettable match state
 - Parent/Coach teaching note
 - Responsive mobile layout
-- Root redirect at repository `index.html`
 - GitHub Actions regression workflow
 
-## Validation
-Automated tests cover:
-- valid and invalid takedown event conditions
-- valid and invalid escape event conditions
-- valid and invalid reversal event conditions
-- state transitions
-- score ownership
-- duplicate-state no-score behavior
-- reset behavior
-- near-fall prerequisites
-- 2 / 3 / 4 point near fall
-- special fifth-point case
-- 15-point technical-fall threshold
-- ongoing near-fall technical-fall stop behavior
-
 ## Rule boundaries
-The code uses a versioned NFHS 2026-27 baseline for the implemented scoring concepts.
-
-NYWC / ICWL context is stored separately. League-specific items that have not yet been verified from an authoritative league source remain explicitly marked pending rather than guessed, including:
-- period lengths
-- overtime procedure
-- age/division modifications
-- league scoring overrides
-
-Do not describe the simulator as a complete officiating engine until those league-specific items and the remaining rulebook areas are independently validated.
+The code uses a versioned NFHS 2026-27 baseline for the implemented scoring concepts. NYWC / ICWL context remains separate, and unverified league-specific rules remain marked pending rather than guessed.
 
 ## Run tests
 ```bash
@@ -53,4 +37,4 @@ npm test
 ```
 
 ## Run locally
-Serve the repository root with any static HTTP server and open `/wrestling/v2/`.
+Serve the repository root with any static HTTP server and open `/wrestling/`.
