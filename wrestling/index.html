@@ -1,1 +1,168 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NYWC Wrestling for Kids</title><link rel="stylesheet" href="styles.css"></head><body><header><div><strong>NYWC WRESTLING FOR KIDS</strong><small>Folkstyle • Learn by seeing the move</small></div><a class="home-link" href="../">All Sports</a><button id="parent">Parent Mode</button></header><main><section class="scoreboard"><div><span>RED</span><strong id="redScore">0</strong></div><div class="center"><b id="lastCall">MATCH READY</b><button id="reset">Reset</button></div><div><span>GREEN</span><strong id="greenScore">0</strong></div></section><nav><button class="on" data-tab="learn">Learn</button><button data-tab="practice">Practice</button><button data-tab="quiz">You Make the Call</button></nav><section class="stage"><div><p class="kicker">FOUNDATION • CONTROL</p><h1 id="heading">Who has control?</h1><p id="explain">Before learning points, learn the position. In neutral, neither wrestler controls the other.</p><div id="feedback" aria-live="polite"></div><ol id="history" class="history"><li>No scoring yet.</li></ol></div><div class="mat"><div class="inner"></div><div id="red" class="kid red neutral"><i class="head"><i class="hair"></i><i class="ear left"></i><i class="ear right"></i><i class="eye left"></i><i class="eye right"></i></i><i class="body"><i class="singlet"></i></i><i class="arm a"></i><i class="arm b"></i><i class="leg a"></i><i class="leg b"></i><i class="shoe sa"></i><i class="shoe sb"></i><strong>RED</strong></div><div id="green" class="kid green neutral"><i class="head"><i class="hair"></i><i class="ear left"></i><i class="ear right"></i><i class="eye left"></i><i class="eye right"></i></i><i class="body"><i class="singlet"></i></i><i class="arm a"></i><i class="arm b"></i><i class="leg a"></i><i class="leg b"></i><i class="shoe sa"></i><i class="shoe sb"></i><strong>GREEN</strong></div><div id="label" class="label">NEUTRAL<small>Nobody has control</small></div></div></section><section class="choices"><button data-state="neutral"><b>Neutral</b><span>Nobody controls</span></button><button data-state="red-control"><b>Red controls</b><span>Red establishes control</span></button><button data-state="green-control"><b>Green controls</b><span>Green establishes control</span></button></section><section class="lesson"><h2>Points come from what changed</h2><div class="grid"><article><b>TAKEDOWN +3</b><p>Neutral → established control.</p></article><article><b>ESCAPE +1</b><p>Controlled wrestler gets free → neutral.</p></article><article><b>REVERSAL +2</b><p>Controlled wrestler gains control.</p></article></div></section><section class="nearfall"><div><p class="kicker">NEAR-FALL LAB</p><h2>Does the count actually earn points?</h2><p>Turn on the prerequisites first, then choose the count.</p></div><div class="checks"><label><input id="nfControl" type="checkbox"> Offensive control</label><label><input id="nfPinning" type="checkbox"> Pinning situation</label><label><input id="nfCriteria" type="checkbox"> Near-fall criteria met</label></div><div class="seconds"><button data-sec="1">1 sec</button><button data-sec="2">2 sec</button><button data-sec="3">3 sec</button><button data-sec="4">4+ sec</button></div><output id="nfResult">Select the conditions and a count.</output><p class="warning"><b>Important:</b> a timer alone never creates near-fall points. The prerequisites must exist first.</p></section><aside id="parentNote" hidden><b>Parent/Coach view</b><p>Ask “Who controls whom?” before asking for points. The visual teaches the state; the versioned rules engine determines the score. Near-fall is intentionally separated so a child does not learn “seconds = points” without the required wrestling position.</p></aside></main><script type="module" src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wrestling for Kids | Sports Simulators</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <a class="brand" href="../"><span class="brand-mark">S</span><span><b>SPORTS SIMULATORS</b><small>Wrestling</small></span></a>
+  <div class="top-actions"><button id="parentMode" class="ghost">Parent Mode</button><button id="reset" class="ghost">Reset Match</button></div>
+</header>
+
+<div class="workspace">
+  <aside class="lesson-rail">
+    <div class="rail-head"><span class="eyebrow">WRESTLING 101</span><h2>Learn the match</h2><p>Five short lessons. See it, call it, then score it.</p></div>
+    <nav class="lesson-list" aria-label="Wrestling lessons">
+      <button class="lesson active" data-lesson="control"><span>1</span><div><b>Control</b><small>Who is in charge?</small></div></button>
+      <button class="lesson" data-lesson="takedown"><span>2</span><div><b>Takedown</b><small>Neutral → control</small></div></button>
+      <button class="lesson" data-lesson="escape"><span>3</span><div><b>Escape</b><small>Control → neutral</small></div></button>
+      <button class="lesson" data-lesson="reversal"><span>4</span><div><b>Reversal</b><small>Control changes</small></div></button>
+      <button class="lesson" data-lesson="nearfall"><span>5</span><div><b>Near Fall</b><small>Turn and hold</small></div></button>
+    </nav>
+    <div class="rail-progress"><span>Lesson progress</span><div class="progress"><i style="width:20%"></i></div><small id="progressText">1 of 5</small></div>
+  </aside>
+
+  <main class="content">
+    <section class="lesson-card">
+      <div class="lesson-header">
+        <div><span id="lessonEyebrow" class="eyebrow">LESSON 1 • CONTROL</span><h1 id="lessonTitle">Who has control?</h1><p id="lessonText">Start with the most important idea in folkstyle wrestling: identify whether the wrestlers are neutral or one wrestler has established control.</p></div>
+        <div class="rule-badge"><small>NFHS 2026–27</small><b id="ruleBadge">POSITION FIRST</b></div>
+      </div>
+
+      <div class="mat-card">
+        <div class="mat-top"><span id="sceneLabel">NEUTRAL</span><span id="sceneHint">Nobody has control</span></div>
+        <div class="mat-stage">
+          <svg id="wrestlingScene" viewBox="0 0 900 500" role="img" aria-label="Two youth wrestlers demonstrating a neutral position">
+            <defs>
+              <radialGradient id="matFill"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e7edf4"/></radialGradient>
+              <linearGradient id="skinA" x1="0" x2="1"><stop stop-color="#d69a72"/><stop offset="1" stop-color="#b97852"/></linearGradient>
+              <linearGradient id="skinB" x1="0" x2="1"><stop stop-color="#d7a079"/><stop offset="1" stop-color="#b97d59"/></linearGradient>
+              <linearGradient id="redSinglet" x1="0" x2="1"><stop stop-color="#ef4444"/><stop offset="1" stop-color="#991b1b"/></linearGradient>
+              <linearGradient id="greenSinglet" x1="0" x2="1"><stop stop-color="#22c55e"/><stop offset="1" stop-color="#166534"/></linearGradient>
+              <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-opacity=".18"/></filter>
+            </defs>
+            <ellipse cx="450" cy="280" rx="405" ry="190" fill="url(#matFill)" stroke="#1d4ed8" stroke-width="10"/>
+            <ellipse cx="450" cy="280" rx="315" ry="145" fill="none" stroke="#ef4444" stroke-width="4" opacity=".85"/>
+            <ellipse cx="450" cy="280" rx="78" ry="42" fill="none" stroke="#64748b" stroke-width="3" opacity=".6"/>
+
+            <g id="scene-neutral" class="scene is-active" filter="url(#shadow)">
+              <g class="wrestler red-wrestler">
+                <path d="M290 208 C272 225 266 255 275 280 C292 298 321 298 340 282 L350 236 C335 214 311 203 290 208Z" fill="url(#redSinglet)" stroke="#7f1d1d" stroke-width="4"/>
+                <ellipse cx="308" cy="174" rx="34" ry="38" fill="url(#skinA)" stroke="#7c4a31" stroke-width="3"/>
+                <path d="M279 164 Q308 128 338 160 L334 143 Q307 118 282 142Z" fill="#2c1810"/>
+                <path d="M278 176 Q270 176 269 190 M338 176 Q347 176 347 190" fill="none" stroke="#334155" stroke-width="8" stroke-linecap="round"/>
+                <circle cx="296" cy="176" r="3.5"/><circle cx="320" cy="176" r="3.5"/>
+                <path d="M300 191 Q309 198 319 190" fill="none" stroke="#7c4a31" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M278 238 Q240 255 224 296" fill="none" stroke="url(#skinA)" stroke-width="25" stroke-linecap="round"/>
+                <path d="M336 237 Q374 250 400 286" fill="none" stroke="url(#skinA)" stroke-width="25" stroke-linecap="round"/>
+                <path d="M289 279 Q270 319 251 354" fill="none" stroke="url(#skinA)" stroke-width="31" stroke-linecap="round"/>
+                <path d="M326 281 Q339 322 363 350" fill="none" stroke="url(#skinA)" stroke-width="31" stroke-linecap="round"/>
+                <path d="M244 354 L218 365" stroke="#111827" stroke-width="18" stroke-linecap="round"/>
+                <path d="M362 350 L390 359" stroke="#111827" stroke-width="18" stroke-linecap="round"/>
+              </g>
+              <g class="wrestler green-wrestler">
+                <path d="M610 208 C628 225 634 255 625 280 C608 298 579 298 560 282 L550 236 C565 214 589 203 610 208Z" fill="url(#greenSinglet)" stroke="#14532d" stroke-width="4"/>
+                <ellipse cx="592" cy="174" rx="34" ry="38" fill="url(#skinB)" stroke="#7c4a31" stroke-width="3"/>
+                <path d="M621 164 Q592 128 562 160 L566 143 Q593 118 618 142Z" fill="#3b2418"/>
+                <path d="M622 176 Q630 176 631 190 M562 176 Q553 176 553 190" fill="none" stroke="#334155" stroke-width="8" stroke-linecap="round"/>
+                <circle cx="604" cy="176" r="3.5"/><circle cx="580" cy="176" r="3.5"/>
+                <path d="M600 191 Q591 198 581 190" fill="none" stroke="#7c4a31" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M622 238 Q660 255 676 296" fill="none" stroke="url(#skinB)" stroke-width="25" stroke-linecap="round"/>
+                <path d="M564 237 Q526 250 500 286" fill="none" stroke="url(#skinB)" stroke-width="25" stroke-linecap="round"/>
+                <path d="M611 279 Q630 319 649 354" fill="none" stroke="url(#skinB)" stroke-width="31" stroke-linecap="round"/>
+                <path d="M574 281 Q561 322 537 350" fill="none" stroke="url(#skinB)" stroke-width="31" stroke-linecap="round"/>
+                <path d="M656 354 L682 365" stroke="#111827" stroke-width="18" stroke-linecap="round"/>
+                <path d="M538 350 L510 359" stroke="#111827" stroke-width="18" stroke-linecap="round"/>
+              </g>
+            </g>
+
+            <g id="scene-red-control" class="scene" filter="url(#shadow)">
+              <g>
+                <ellipse cx="500" cy="242" rx="34" ry="37" fill="url(#skinB)" stroke="#7c4a31" stroke-width="3"/>
+                <path d="M470 274 Q505 260 550 286 L544 336 Q496 351 454 322Z" fill="url(#greenSinglet)" stroke="#14532d" stroke-width="4"/>
+                <path d="M470 300 Q421 317 395 348 M530 316 Q579 328 605 353" fill="none" stroke="url(#skinB)" stroke-width="27" stroke-linecap="round"/>
+                <path d="M475 330 Q447 367 433 392 M532 334 Q555 369 573 392" fill="none" stroke="url(#skinB)" stroke-width="30" stroke-linecap="round"/>
+                <path d="M420 394 L395 402 M580 394 L605 402" stroke="#111827" stroke-width="17" stroke-linecap="round"/>
+              </g>
+              <g>
+                <ellipse cx="412" cy="201" rx="33" ry="37" fill="url(#skinA)" stroke="#7c4a31" stroke-width="3"/>
+                <path d="M382 232 Q416 218 451 242 L473 292 Q434 316 391 286Z" fill="url(#redSinglet)" stroke="#7f1d1d" stroke-width="4"/>
+                <path d="M448 250 Q483 259 515 292" fill="none" stroke="url(#skinA)" stroke-width="24" stroke-linecap="round"/>
+                <path d="M398 253 Q432 278 463 298" fill="none" stroke="url(#skinA)" stroke-width="24" stroke-linecap="round"/>
+                <path d="M400 285 Q372 329 360 365 M449 291 Q456 334 474 363" fill="none" stroke="url(#skinA)" stroke-width="29" stroke-linecap="round"/>
+                <path d="M352 368 L328 378 M478 365 L500 374" stroke="#111827" stroke-width="17" stroke-linecap="round"/>
+              </g>
+              <path d="M455 290 Q484 300 514 291" fill="none" stroke="#f8fafc" stroke-width="6" stroke-linecap="round"/>
+            </g>
+
+            <g id="scene-green-control" class="scene" filter="url(#shadow)">
+              <g transform="translate(900 0) scale(-1 1)">
+                <ellipse cx="500" cy="242" rx="34" ry="37" fill="url(#skinA)" stroke="#7c4a31" stroke-width="3"/>
+                <path d="M470 274 Q505 260 550 286 L544 336 Q496 351 454 322Z" fill="url(#redSinglet)" stroke="#7f1d1d" stroke-width="4"/>
+                <path d="M470 300 Q421 317 395 348 M530 316 Q579 328 605 353" fill="none" stroke="url(#skinA)" stroke-width="27" stroke-linecap="round"/>
+                <path d="M475 330 Q447 367 433 392 M532 334 Q555 369 573 392" fill="none" stroke="url(#skinA)" stroke-width="30" stroke-linecap="round"/>
+                <path d="M420 394 L395 402 M580 394 L605 402" stroke="#111827" stroke-width="17" stroke-linecap="round"/>
+              </g>
+              <g transform="translate(900 0) scale(-1 1)">
+                <ellipse cx="412" cy="201" rx="33" ry="37" fill="url(#skinB)" stroke="#7c4a31" stroke-width="3"/>
+                <path d="M382 232 Q416 218 451 242 L473 292 Q434 316 391 286Z" fill="url(#greenSinglet)" stroke="#14532d" stroke-width="4"/>
+                <path d="M448 250 Q483 259 515 292" fill="none" stroke="url(#skinB)" stroke-width="24" stroke-linecap="round"/>
+                <path d="M398 253 Q432 278 463 298" fill="none" stroke="url(#skinB)" stroke-width="24" stroke-linecap="round"/>
+                <path d="M400 285 Q372 329 360 365 M449 291 Q456 334 474 363" fill="none" stroke="url(#skinB)" stroke-width="29" stroke-linecap="round"/>
+                <path d="M352 368 L328 378 M478 365 L500 374" stroke="#111827" stroke-width="17" stroke-linecap="round"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="state-controls" aria-label="Position controls">
+          <button class="state active" data-state="neutral"><span class="dot neutral-dot"></span><b>Neutral</b><small>Nobody controls</small></button>
+          <button class="state" data-state="red-control"><span class="dot red-dot"></span><b>Red controls</b><small>Red is on top</small></button>
+          <button class="state" data-state="green-control"><span class="dot green-dot"></span><b>Green controls</b><small>Green is on top</small></button>
+        </div>
+      </div>
+
+      <div id="feedback" class="feedback" aria-live="polite"><span class="feedback-icon">i</span><div><b>Start here</b><p>Tap a position. The simulator will explain whether points are earned and why.</p></div></div>
+
+      <section id="takedownSteps" class="sequence-card" hidden>
+        <div class="sequence-head"><div><span class="eyebrow">TAKEDOWN SEQUENCE</span><h2>Points come after control</h2></div><b class="points-pill">+3</b></div>
+        <div class="steps">
+          <button data-step="0" class="step active"><span>1</span><b>Neutral</b><small>No points</small></button>
+          <button data-step="1" class="step"><span>2</span><b>Attack</b><small>Still no points</small></button>
+          <button data-step="2" class="step"><span>3</span><b>Finish</b><small>Control developing</small></button>
+          <button data-step="3" class="step"><span>4</span><b>Control</b><small>Takedown +3</small></button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <aside class="side-panel">
+    <section class="score-mini">
+      <span class="eyebrow">MATCH SCORE</span>
+      <div class="mini-score"><div><span class="red-chip">RED</span><b id="redScore">0</b></div><span>–</span><div><span class="green-chip">GREEN</span><b id="greenScore">0</b></div></div>
+      <div id="lastCall" class="last-call">MATCH READY</div>
+    </section>
+
+    <section class="rules-card">
+      <span class="eyebrow">SCORING AT A GLANCE</span>
+      <div><b>Takedown</b><span>+3</span></div>
+      <div><b>Escape</b><span>+1</span></div>
+      <div><b>Reversal</b><span>+2</span></div>
+      <div><b>Near fall</b><span>2 / 3 / 4</span></div>
+    </section>
+
+    <section id="parentNote" class="coach-card" hidden>
+      <span class="eyebrow">PARENT / COACH</span>
+      <h3>Teach the position first.</h3>
+      <p>Ask “Who controls whom?” before asking how many points. The rule engine—not the illustration—decides the call.</p>
+    </section>
+  </aside>
+</div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
