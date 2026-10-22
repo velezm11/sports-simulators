@@ -1,4 +1,4 @@
-import {nearFall} from "../rules/nfhs-2026-27.js";import {createMatch,applyTransition,resetMatch} from "./match-state.js";
+import {nearFall} from "./rules/nfhs-2026-27.js";import {createMatch,applyTransition,resetMatch} from "./match-state.js";
 const R=document.querySelector("#red"),G=document.querySelector("#green"),L=document.querySelector("#label"),F=document.querySelector("#feedback"),RS=document.querySelector("#redScore"),GS=document.querySelector("#greenScore"),H=document.querySelector("#history"),C=document.querySelector("#lastCall");
 let match=createMatch();
 const labels={neutral:["NEUTRAL","Nobody has control"],"red-control":["RED CONTROL","Red has established control"],"green-control":["GREEN CONTROL","Green has established control"]};
