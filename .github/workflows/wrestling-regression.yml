@@ -20,6 +20,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: python3 -m http.server 8765 &
-      - run: google-chrome --headless=new --disable-gpu --no-sandbox --remote-debugging-port=9333 about:blank &
-      - run: sleep 3 && npm run test:ui
+      - name: UI click-through
+        run: |
+          python3 -m http.server 8765 &
+          google-chrome --headless=new --disable-gpu --no-sandbox --remote-debugging-port=9333 about:blank &
+          for i in $(seq 1 30); do curl -s localhost:9333/json >/dev/null && curl -s localhost:8765/ >/dev/null && break; sleep 1; done
+          npm run test:ui

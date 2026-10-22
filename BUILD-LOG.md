@@ -52,3 +52,11 @@ The `actions/deploy-pages` run on `main` was rejected: the `github-pages` enviro
 - Reviewed all 11 illustrations at full size for hand placement, limb anatomy and position accuracy. All read correctly for their step; the only rejected render was the first near fall (bottom wrestler belly-down, a breakdown not a near fall). Near fall still uses the rig until Scenario credits allow a redo; the Score a Match count screen now shows the top-control illustration with a count badge instead of the rig.
 - Removed the Pin/Fall duplication: lesson 5 (Foundation) teaches what a pin is from the referee's position; lesson 10 "Fall beats points" starts from a preset 0-6 scoreboard and shows the fall overriding the score. Sit-out caption corrected to match the picture (Red has lost his grip, Green is not yet behind him).
 - Added `wrestling/tools/ui-smoke.mjs` (`npm run test:ui`): drives headless Chrome over CDP and clicks every lesson, every filmstrip frame, Back/Next, all Practice choices and tasks, all Make the Call plays and answers, every Score a Match button (positions, 4 near-fall counts, pin, tech fall at 15, new match, reset), coach toggle and reset. 233 checks, 0 failures, 0 console errors. Runs in CI as the `ui-smoke` job.
+
+## 2026-10-22 Review round 2 (two phone recordings of the live build)
+
+Found: the referee's-position illustration reused as "control" in 8 places (not a takedown finish, not active control) and carrying a deformed hand; rig-drawn frames still visible in Near fall step 2, the Make the Call near-fall question and the Score a Match count thumbnail; iOS text-selection popup on button taps.
+
+Done today: added `AGENTS.md` and `docs/SME-PLAYBOOK.md` (13 roles, 10 hard gates, image recipe). Removed the last rig-drawn frames from the live app: Near fall lesson is two illustrated steps until a reviewed near-fall picture exists, and the near-fall Make the Call question is parked with it. iOS: `user-select:none` and `touch-action:manipulation` on controls. `ui-smoke.mjs` now requires an illustration on every frame (G2).
+
+Pending (tomorrow, free credits): takedown finish, active top control (red and mirrored green) and near fall pictures, reviewed under G3-G5, replacing the referee's-position reuse in Control step 3, Takedown step 5, Escape/Reversal/Near fall step 1 and Score a Match.

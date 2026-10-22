@@ -8,7 +8,8 @@
 [hidden]{display:none!important}
 html,body{max-width:100%;overflow-x:hidden}
 body{margin:0;background:linear-gradient(180deg,var(--navy) 0 150px,#e9eef5 150px);min-height:100vh;font-size:16px;line-height:1.45}
-button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;min-height:48px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;min-height:48px;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.stage,.signal-chip,.state-chip,.film,.filmstrip,.caption,.happening-body,.scoreboard{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 button:focus-visible,a:focus-visible{outline:4px solid var(--focus);outline-offset:2px;border-radius:12px}
 .skip{position:absolute;left:-999px;top:8px;background:#fff;padding:10px 14px;border-radius:10px;z-index:9}
 .skip:focus{left:8px}
