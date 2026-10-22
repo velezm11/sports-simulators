@@ -29,3 +29,12 @@ Rules research results are in `docs/rules-sources.md`.
 ## 2026-10-22 Pages publish path
 
 The `actions/deploy-pages` run on `main` was rejected: the `github-pages` environment only allows the `gh-pages` branch to deploy, and the Pages source is still the legacy branch. Both settings need repository admin, which the automation token does not have (403). Switched the workflow to publish `main` into `gh-pages` with `peaceiris/actions-gh-pages` using the workflow token, so production tracks `main` with no settings change. `gh-pages` is now generated output.
+
+## 2026-10-22 Deploy verified, UI rebuild
+
+- Production verified after the publish workflow (run on `9c9f31c`): root 200, `/wrestling/` serves the current app, `/wrestling/app.js` 200, `/wrestling/v2/` 404.
+- Rebuilt `/wrestling/` as a four-mode app (Learn, Practice, Make the Call, Score a Match) with a lesson rail, gym-and-mat stage, rig-based wrestlers with headgear, singlets, ankle bands, name tags and an "IN CONTROL" marker (control is never shown by color alone), referee signal chip, scoreboard with history, rule card with source and verification status, coach view, local progress.
+- 14 two-wrestler poses: neutral, tie-up, shot, finish, control (both), referee's position, stand-up, escape to neutral, sit-out, near fall, pin. Checked on the pose sheet for plausible body positions.
+- 11 lessons shipped (Foundation 1-5, Basic scoring 6-10, Technical fall). Match basics 12-15 and the penalty block wait on the rules record.
+- `match-state.js` gained near fall, fall and technical fall handling; regression tests cover prerequisite gates, 2/3/4-second boundaries, criteria not met, ownership, match-ending states and the 15-point margin.
+- Mobile checked through a 390px iframe: single column, 2x2 mode tabs, 48px minimum targets.

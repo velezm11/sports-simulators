@@ -37,3 +37,11 @@ npm test
 
 ## Run locally
 Serve the repository root with any static HTTP server and open `/wrestling/`.
+
+## Layout (after the 2026-10-22 rebuild)
+
+- `index.html`, `styles.css`, `app.js`: shell with four modes (Learn, Practice, Make the Call, Score a Match). Deep links: `#learn/<lessonId>/<step>`, `#practice`, `#call`, `#match`.
+- `ui/figures.js`: rig-based youth wrestler renderer (joint map in, SVG group out). `ui/poses.js`: pose library for both wrestlers per frame. `ui/scene.js`: gym, mat, control marker, badges. `ui/lessons.js`: curriculum content, Make the Call items. Point values shown in the UI are read from `rules/nfhs-2026-27.js` at render time.
+- `match-state.js`: `applyTransition`, `applyNearFall`, `applyFall`; the UI never adds points itself.
+- `tools/pose-sheet.html`: contact sheet of every pose for checking body positions (`?f=SHOT,FINISH` to filter).
+- Progress is stored in `localStorage` only (lesson completion and Make the Call tallies). No names, accounts or network calls.
