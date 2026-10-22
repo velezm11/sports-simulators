@@ -25,3 +25,7 @@ Rules research results are in `docs/rules-sources.md`.
 - Removed `wrestling/v2/` (meta-refresh redirect). The stale `gh-pages` branch is left in place until the Actions deployment is verified, then deleted.
 - Added an `overflow-x` guard on `html,body` and `min-width:0` on the layout containers. Mobile screenshots for the log are now taken through a 390px iframe wrapper so the viewport is real.
 - Added `docs/rules-sources.md` and this log.
+
+## 2026-10-22 Pages publish path
+
+The `actions/deploy-pages` run on `main` was rejected: the `github-pages` environment only allows the `gh-pages` branch to deploy, and the Pages source is still the legacy branch. Both settings need repository admin, which the automation token does not have (403). Switched the workflow to publish `main` into `gh-pages` with `peaceiris/actions-gh-pages` using the workflow token, so production tracks `main` with no settings change. `gh-pages` is now generated output.

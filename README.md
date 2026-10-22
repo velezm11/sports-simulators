@@ -18,6 +18,6 @@ npm test                      # rules + match-state regression
 python3 -m http.server 8765   # then open http://localhost:8765/wrestling/
 ```
 
-Deployment is GitHub Pages from `main` through `.github/workflows/pages.yml` (tests run first). `.nojekyll` keeps Pages from running Jekyll on the static files.
+Deployment: every push to `main` runs `.github/workflows/pages.yml`, which runs the tests and then publishes the repository root to the `gh-pages` branch that GitHub Pages serves. Never edit `gh-pages` by hand; it is build output. `.nojekyll` keeps Pages from running Jekyll on the static files.
 
 See `BUILD-LOG.md` for the running engineering log and `docs/rules-sources.md` for the rules verification record.
