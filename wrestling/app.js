@@ -120,6 +120,7 @@ function renderLearn(){
   head("Lesson "+l.n+" · "+GROUPS.find(g=>g.id===l.group).title,l.title,l.kid);
   // replay the sequence through the engine so the scoreboard is rule-driven
   match=createMatch();
+  if(l.preset){match.red=l.preset.red;match.green=l.preset.green;}
   for(let i=0;i<=frameIndex;i++){
     const fr=l.frames[i];
     if(fr.score)match=applyTransition(match,fr.state);else match={...match,state:fr.state};
@@ -278,11 +279,11 @@ let nfPending=false;
 function renderMatch(){
   head("Score a Match","Rule-driven scorer","Every point comes from the rules engine. No free buttons.");
   const m=STATE_META[match.state];
-  const poseName=nfPending&&m.controller?"NEAR_FALL":m.pose;
-  const mirrored=nfPending&&m.controller==="green";
-  stage({pose:mirrored?"NEAR_FALL":poseName,controller:m.controller,badge:match.ended?(match.ended.reason==="fall"?"FALL":"TECHNICAL FALL"):nfPending?"NEAR FALL COUNT":undefined,badgeTone:match.ended?"score":nfPending?"warn":undefined},"Match position: "+m.label.toLowerCase());
+  const poseName=nfPending&&m.controller==="red"?"REF_POSITION_RED_TOP":m.pose;
+  const mirrored=false;
+  stage({pose:poseName,controller:m.controller,badge:match.ended?(match.ended.reason==="fall"?"FALL":"TECHNICAL FALL"):nfPending?"NEAR FALL COUNT":undefined,badgeTone:match.ended?"score":nfPending?"warn":undefined},"Match position: "+m.label.toLowerCase());
   setStateChip(match.state);setSignal(match.ended?"Stopping the match (signal 2)":nfPending?"Near fall (signal 21)":m.controller?"Wrestler in control (signal 11)":"Neutral position (signal 8)");
-  renderHappening({pose:mirrored?"NEAR_FALL":poseName,controller:m.controller},match.ended?"<b>Match over!</b> "+match.ended.winner.toUpperCase()+" wins.":STATE_KID[match.state]);
+  renderHappening({pose:poseName,controller:m.controller},match.ended?"<b>Match over!</b> "+match.ended.winner.toUpperCase()+" wins.":STATE_KID[match.state]);
   $("#caption").textContent=match.ended?(match.ended.winner.toUpperCase()+" wins by "+(match.ended.reason==="fall"?"pin!":"technical fall! "+match.ended.margin+" points ahead.")):nfPending?"The ref is counting! How long was "+(m.controller==="red"?"Green":"Red")+"'s back near the mat?":"What happened on the mat? Tap where they are now.";
   $("#frames").innerHTML="";
   const a=$("#actions");a.innerHTML="";

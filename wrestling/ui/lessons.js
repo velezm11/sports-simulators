@@ -44,8 +44,8 @@ export const LESSONS=Object.freeze([
   {
     id:"pin",group:"foundation",n:5,title:"Pin (fall)",kid:"Both shoulders down = match over.",
     frames:[
-      {pose:"NEAR_FALL",state:"red-control",controller:"red",caption:"Red turns Green over. Green's back is showing, but both shoulders are not down yet.",thumb:"Back showing",coach:"Back exposure is a near-fall situation, not a fall.",signal:"Near fall (signal 21)"},
-      {pose:"PIN",state:"red-control",controller:"red",caption:"Both of Green's shoulders are on the mat. The ref slaps the mat. PIN! The match is over.",thumb:"Pin!",coach:"A fall ends the match immediately regardless of score. The exact count length is listed as pending in the rules record until the rules book text is on file.",signal:"Stopping the match (signal 2)",badge:"FALL",badgeTone:"score",ends:true}
+      {pose:"REF_POSITION_RED_TOP",state:"red-control",controller:"red",caption:"Red is on top. Green is on hands and knees. Green's back is safe, so no pin.",coach:"The pin is the goal of every top position. From here the top wrestler works to turn the bottom wrestler over.",signal:"Wrestler in control (signal 11)",thumb:"Back is safe"},
+      {pose:"PIN",state:"red-control",controller:"red",caption:"Now both of Green's shoulders are on the mat. The ref slaps the mat. PIN! The match is over.",coach:"A fall ends the match immediately regardless of score. The exact count length is listed as pending in the rules record until the rules book text is on file.",signal:"Stopping the match (signal 2)",badge:"FALL",badgeTone:"score",ends:true,thumb:"Pin!"}
     ],
     source:"S3, pending",status:"partly-verified",rule:"A fall ends the match. The count duration is still unresolved in our record."
   },
@@ -73,7 +73,7 @@ export const LESSONS=Object.freeze([
     id:"reversal",group:"scoring",n:8,title:"Reversal",kid:"Bottom to top in one move.",
     frames:[
       {pose:"REF_POSITION_RED_TOP",state:"red-control",controller:"red",caption:"Step 1. Red is on top. Green is on the bottom.",thumb:"Red on top",coach:"Start in the referee's position.",signal:"Wrestler in control (signal 11)"},
-      {pose:"SIT_OUT",state:"red-control",controller:"red",caption:"Step 2. Green sits and spins. Red is slipping off. Nobody is in control yet.",thumb:"Green spins",coach:"During the switch there is a moment with no clear control. No points yet.",signal:"Indicates no control (signal 9)"},
+      {pose:"SIT_OUT",state:"red-control",controller:"red",caption:"Step 2. Green sits out and turns to face Red. Red lost his grip. Nobody is in control right now.",thumb:"Green turns",coach:"Red has lost his grip but Green is not behind Red yet, so nobody is in control. No points yet.",signal:"Indicates no control (signal 9)"},
       {pose:"CONTROL_GREEN",state:"green-control",controller:"green",caption:"Step 3. Now Green is on top of Red! REVERSAL! Green gets points.",thumb:"Reversal!",coach:"Reversal: from being controlled straight to control, without a neutral position in between.",signal:"Awarding points (signal 22)",score:{call:"reversal",wrestler:"green"}}
     ],
     source:"S1, S2, engine",status:"verified",rule:"Reversal is scored when the bottom wrestler gains control without going through neutral."
@@ -88,12 +88,13 @@ export const LESSONS=Object.freeze([
     source:"S1, engine",status:"verified",rule:"Near fall: control, pinning situation, criteria met, 2 or more seconds. Scored once when the situation ends."
   },
   {
-    id:"fall",group:"scoring",n:10,title:"Fall",kid:"A pin wins, no matter the score.",
+    id:"fall",group:"scoring",n:10,title:"Fall beats points",kid:"A pin wins, no matter the score.",
+    preset:{red:0,green:6},
     frames:[
-      {pose:"NEAR_FALL",state:"red-control",controller:"red",caption:"Red is turning Green over. Green's shoulders are close to the mat.",thumb:"Turning over",coach:"A pinning situation.",signal:"Near fall (signal 21)"},
-      {pose:"PIN",state:"red-control",controller:"red",caption:"Both shoulders down! FALL! Red wins right now, even if Green had more points.",thumb:"Pin!",coach:"The fall ends the match immediately. Score does not matter.",signal:"Stopping the match (signal 2)",badge:"FALL",badgeTone:"score",ends:true}
+      {pose:"CONTROL_RED",state:"red-control",controller:"red",caption:"Look at the scoreboard: Green is winning 6 to 0. But Red just got on top.",coach:"The scoreboard shows a preset 0-6 so children can see that a fall overrides points.",signal:"Wrestler in control (signal 11)",thumb:"Green leads 6-0"},
+      {pose:"PIN",state:"red-control",controller:"red",caption:"Red pins Green. Both shoulders down! Red wins right now, even though Green had more points.",coach:"The fall ends the match immediately. Score does not matter.",signal:"Stopping the match (signal 2)",badge:"FALL",badgeTone:"score",ends:true,thumb:"Red wins by pin"}
     ],
-    source:"S3, pending",status:"partly-verified",rule:"A fall ends the match immediately. Count duration unresolved."
+    source:"S3, pending",status:"partly-verified",rule:"A fall ends the match immediately, whatever the score. Count duration unresolved."
   },
   {
     id:"techfall",group:"match",n:11,title:"Technical fall",kid:"Way ahead? The match stops.",
