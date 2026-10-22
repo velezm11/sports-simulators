@@ -3,12 +3,12 @@
   color:#142033;background:#0b1726;--navy:#0b1726;--ink:#142033;--muted:#66768c;--line:#dbe3ec;
   --red:#dc2626;--green:#16a34a;--blue:#2563eb;--panel:#f5f8fc
 }
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1726 0 130px,#edf2f7 130px 100%);min-height:100vh}
+*{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{margin:0;background:linear-gradient(180deg,#0b1726 0 130px,#edf2f7 130px 100%);min-height:100vh}
 button,a{font:inherit}.app-shell{min-height:100vh}.topbar{height:78px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;color:white}
 .brand{display:flex;gap:12px;align-items:center;color:white;text-decoration:none}.brand-mark{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:#fff;color:#0b1726;font-weight:950}
 .brand span:last-child{display:grid}.brand b{font-size:.88rem;letter-spacing:.08em}.brand small{color:#9fb0c5;margin-top:2px}.top-actions{display:flex;gap:10px}
 .ghost{border:1px solid #ffffff30;background:#ffffff0c;color:white;padding:10px 15px;border-radius:12px;font-weight:800;cursor:pointer}
-.workspace{max-width:1500px;margin:0 auto;padding:0 24px 34px;display:grid;grid-template-columns:240px minmax(0,1fr) 260px;gap:20px;align-items:start}
+.workspace{max-width:1500px;min-width:0;margin:0 auto;padding:0 24px 34px;display:grid;grid-template-columns:240px minmax(0,1fr) 260px;gap:20px;align-items:start}
 .lesson-rail,.lesson-card,.score-mini,.rules-card,.coach-card{background:white;border:1px solid #dce4ed;box-shadow:0 12px 30px #0f172a10}
 .lesson-rail{border-radius:22px;padding:22px;position:sticky;top:18px}.rail-head h2{margin:8px 0;font-size:1.35rem}.rail-head p{color:var(--muted);font-size:.92rem;line-height:1.45;margin:0 0 18px}
 .eyebrow{font-size:.72rem;letter-spacing:.12em;font-weight:950;color:#6b7b90}.lesson-list{display:grid;gap:8px}
@@ -27,4 +27,4 @@ button,a{font:inherit}.app-shell{min-height:100vh}.topbar{height:78px;display:fl
 .rules-card{display:grid;gap:0}.rules-card>.eyebrow{margin-bottom:9px}.rules-card div{display:flex;justify-content:space-between;border-top:1px solid #edf1f5;padding:10px 0}.rules-card div:first-of-type{border-top:0}.rules-card span{font-weight:900;color:#43546a}
 .coach-card{background:#fffaf0;border-color:#f7d999}.coach-card h3{margin:8px 0}.coach-card p{margin:0;color:#675d49;line-height:1.45}
 @media(max-width:1150px){.workspace{grid-template-columns:210px minmax(0,1fr)}.side-panel{grid-column:1/-1;grid-template-columns:repeat(3,1fr);position:static}}
-@media(max-width:820px){body{background:#edf2f7}.topbar{background:#0b1726;height:auto;padding:16px 18px;gap:12px;flex-wrap:wrap}.workspace{display:block;padding:14px}.lesson-rail{position:static;margin-bottom:14px}.lesson-list{grid-template-columns:repeat(5,minmax(130px,1fr));overflow-x:auto}.lesson{min-width:145px}.rail-head p,.rail-progress{display:none}.lesson-card{padding:16px;border-radius:20px}.lesson-header{display:block}.rule-badge{display:inline-grid;margin-top:12px;text-align:left}.state-controls,.steps{grid-template-columns:1fr}.side-panel{display:grid;grid-template-columns:1fr;margin-top:14px}.mat-stage{padding:0}.mat-stage svg{min-height:300px}.top-actions{width:100%}.ghost{flex:1}}
+@media(max-width:820px){body{background:#edf2f7}.lesson-rail,.lesson-card,.side-panel,.mat-card{max-width:100%;min-width:0}.top-actions{flex-wrap:wrap}.topbar{background:#0b1726;height:auto;padding:16px 18px;gap:12px;flex-wrap:wrap}.workspace{display:block;padding:14px}.lesson-rail{position:static;margin-bottom:14px}.lesson-list{grid-template-columns:repeat(5,minmax(130px,1fr));overflow-x:auto}.lesson{min-width:145px}.rail-head p,.rail-progress{display:none}.lesson-card{padding:16px;border-radius:20px}.lesson-header{display:block}.rule-badge{display:inline-grid;margin-top:12px;text-align:left}.state-controls,.steps{grid-template-columns:1fr}.side-panel{display:grid;grid-template-columns:1fr;margin-top:14px}.mat-stage{padding:0}.mat-stage svg{min-height:300px}.top-actions{width:100%}.ghost{flex:1}}
