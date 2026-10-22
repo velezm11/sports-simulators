@@ -22,11 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Publish main to the gh-pages branch (GitHub Pages source)
+      - name: Collect the static site
+        run: rsync -a --exclude .git --exclude .github --exclude _site ./ _site/
+      - name: Publish to the gh-pages branch (GitHub Pages source)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          exclude_assets: ".github,.git"
+          publish_dir: ./_site
           force_orphan: true
           commit_message: "Publish ${{ github.sha }}"
