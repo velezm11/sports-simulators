@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wrestling Simulator | Sports Simulators</title>
+<meta name="description" content="A kid-first interactive folkstyle wrestling simulator for NYWC and ICWL families. Learn position, control, scoring and referee calls visually.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#stage-card">Skip to the mat</a>
+<header class="topbar">
+  <a class="brand" href="../" aria-label="Sports Simulators home">
+    <span class="brand-mark" aria-hidden="true">W</span>
+    <span class="brand-text"><b>Wrestling Simulator</b><small>Sports Simulators · youth folkstyle</small></span>
+  </a>
+  <nav class="modes" aria-label="Modes" role="tablist">
+    <button class="mode active" role="tab" aria-selected="true" data-mode="learn"><span class="mode-icon" aria-hidden="true">1</span>Learn</button>
+    <button class="mode" role="tab" aria-selected="false" data-mode="practice"><span class="mode-icon" aria-hidden="true">2</span>Practice</button>
+    <button class="mode" role="tab" aria-selected="false" data-mode="call"><span class="mode-icon" aria-hidden="true">3</span>Make the Call</button>
+    <button class="mode" role="tab" aria-selected="false" data-mode="match"><span class="mode-icon" aria-hidden="true">4</span>Score a Match</button>
+  </nav>
+  <div class="top-actions">
+    <button id="coachToggle" class="ghost" aria-pressed="false">Coach view</button>
+    <button id="resetAll" class="ghost">Reset</button>
+  </div>
+</header>
+
+<main class="workspace">
+  <aside class="rail" aria-label="Lessons">
+    <div class="rail-head"><span class="eyebrow">Lessons</span><span id="progressText" class="progress-text">0 of 0 done</span></div>
+    <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+    <nav id="lessonList" class="lesson-list" aria-label="Lesson list"></nav>
+  </aside>
+
+  <section id="stage-card" class="stage-card" tabindex="-1">
+    <div class="stage-head">
+      <div>
+        <span id="stageEyebrow" class="eyebrow">Lesson 1 · Foundation</span>
+        <h1 id="stageTitle">Neutral</h1>
+        <p id="stageKid" class="kid-line">Nobody is in charge yet.</p>
+      </div>
+      <div id="stateChip" class="state-chip neutral"><span class="chip-dot" aria-hidden="true"></span><b>NEUTRAL</b><small>Nobody has control</small></div>
+    </div>
+    <div class="stage">
+      <svg id="stage" viewBox="0 0 900 500" role="img" aria-label="Two youth wrestlers in a neutral position"></svg>
+      <div id="signalChip" class="signal-chip"><span class="signal-ref" aria-hidden="true">REF</span><span id="signalText">Neutral position</span></div>
+    </div>
+    <div class="coach-row">
+      <div class="coach-avatar" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="66" r="36" fill="#f3cfae"/><path d="M24 62 Q24 34 60 32 Q96 34 96 62 L96 58 Q60 44 24 58Z" fill="#4a2f1a"/><path d="M20 56 Q60 26 100 56 L104 62 Q60 40 16 62Z" fill="#0b1726"/><rect x="14" y="56" width="92" height="10" rx="5" fill="#0b1726"/><text x="60" y="52" text-anchor="middle" font-size="16" font-weight="900" fill="#f5b700" font-family="Inter,system-ui,sans-serif">C</text><circle cx="47" cy="72" r="4.2" fill="#1e2a3a"/><circle cx="73" cy="72" r="4.2" fill="#1e2a3a"/><circle cx="48.5" cy="70.5" r="1.4" fill="#fff"/><circle cx="74.5" cy="70.5" r="1.4" fill="#fff"/><path d="M44 86 Q60 100 76 86" stroke="#9b4a3a" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M40 100 Q60 112 80 100" stroke="#f5b700" stroke-width="3" fill="none"/><circle cx="60" cy="112" r="6.5" fill="#f5b700" stroke="#b7860b" stroke-width="2"/></svg></div>
+      <p id="caption" class="caption bubble" aria-live="polite"></p>
+    </div>
+    <div id="frames" class="frames" role="group" aria-label="Sequence steps"></div>
+    <div id="actions" class="actions"></div>
+    <div id="feedback" class="feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <aside class="side" aria-label="Scoreboard and guide">
+    <section class="card scoreboard" aria-label="Scoreboard">
+      <span class="eyebrow">Scoreboard</span>
+      <div class="score-row">
+        <div class="score red"><small>RED</small><b id="redScore">0</b></div>
+        <div class="score-mid" aria-hidden="true">–</div>
+        <div class="score green"><small>GREEN</small><b id="greenScore">0</b></div>
+      </div>
+      <div id="lastCall" class="last-call">Ready to wrestle</div>
+      <ol id="history" class="history" aria-label="Scoring history"></ol>
+    </section>
+    <section class="card happening" aria-label="What is happening">
+      <span class="eyebrow"><span class="bulb" aria-hidden="true">?</span> What's happening?</span>
+      <div id="happening" class="happening-body"></div>
+    </section>
+    <section class="card guide" aria-label="Rule guide">
+      <span class="eyebrow">The rule</span>
+      <p id="ruleText" class="rule-text"></p>
+      <div class="rule-meta"><span id="ruleStatus" class="pill verified">Verified</span><span id="ruleSource" class="source"></span></div>
+      <div id="coachNote" class="coach-note" hidden><span class="eyebrow">Coach and parent note</span><p id="coachText"></p></div>
+    </section>
+    <section class="card glance" aria-label="Scoring at a glance">
+      <span class="eyebrow">Scoring at a glance</span>
+      <ul id="glance" class="glance-list"></ul>
+      <p class="league-note">League: Neshaminy Youth Wrestling Club in the ICWL. Period lengths and overtime for ICWL age groups are not yet verified, so the scorer does not run a clock.</p>
+    </section>
+  </aside>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

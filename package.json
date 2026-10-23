@@ -1,0 +1,9 @@
+{
+  "name": "sports-simulators",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node wrestling/tests/regression.test.mjs && node wrestling/tests/match-state.test.mjs",
+    "test:ui": "node wrestling/tools/ui-smoke.mjs http://localhost:8765/wrestling/"
+  }
+}
