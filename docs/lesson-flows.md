@@ -55,3 +55,24 @@ Each image: generate at 1536x1024, open the original, count fingers on every han
 
 ## Make the Call after the new pictures
 Add back the near-fall count question (HALF_NELSON -> NEAR_FALL_EXPOSURE, answer "Keep counting") and add "Red is in the level change, Green still standing: no points", and "Green clears the hands but has not turned: no points".
+
+## Status (day 1 generation, 2026-10-23)
+Scenario's free plan stopped after 7 jobs (not 12), so the day-1 queue landed in two parts.
+
+Reviewed at the 1536x1024 original and listed in `art.js` (fingers counted on every hand, joints, headgear, singlet colors, caption nouns visible):
+- TAKEDOWN_CONTROL: pass. Red behind and on top, chest on back, hands clasped under Green's waist, Green down on hands and knees.
+- REF_POSITION_RED_TOP (fix): pass. Palm on the navel, far hand cupping the back of the elbow, Green's hands flat in front of the knees. Replaces the deformed-hand original and its CONTROL_RED copy.
+- NEAR_FALL_EXPOSURE: pass. Half nelson (arm under the near arm, hand on the back of the head), Green bridging with the back toward the mat, one shoulder up, Red chest to chest.
+- SIT_OUT_TIGHT: pass. Green seated with legs out, Red kneeling behind with the arm still around the waist, Green's hand on Red's hand.
+- TURN_IN: pass. Green on his knees facing Red, arm around Red's lower back, Red off balance leaning back.
+
+Rejected:
+- HALF_NELSON (first render): Red's arm goes over Green's shoulder to the head instead of under the near arm. Not a half nelson. Redo.
+
+Not generated yet (plan limit): TOP_RIDE, TOP_RIDE_GREEN, LEVEL_CHANGE, CLEAR_HANDS, REVERSAL_CONTROL, HALF_NELSON redo.
+
+Interim mapping until those exist:
+- CONTROL_GREEN (mirrored referee's position, flagged hands) remains the only Green-in-control picture: reversal step 4, Make the Call reversal answer, Score a Match green control. It is replaced by REVERSAL_CONTROL / TOP_RIDE_GREEN as soon as they pass review.
+- TAKEDOWN_CONTROL stands in for TOP_RIDE (Red on top in control: near fall step 3, fall lesson step 1, technical fall, Score a Match red control). Same concept, so gate G4 holds.
+- Takedown lesson keeps 5 frames (level change is described in step 3's caption and coach note until LEVEL_CHANGE exists). Escape keeps 3 frames (hand control is described in step 3 until CLEAR_HANDS exists).
+- SIT_OUT and CONTROL_RED art files are deleted; the smoke test fails if they come back.

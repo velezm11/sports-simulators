@@ -60,3 +60,16 @@ Found: the referee's-position illustration reused as "control" in 8 places (not 
 Done today: added `AGENTS.md` and `docs/SME-PLAYBOOK.md` (13 roles, 10 hard gates, image recipe). Removed the last rig-drawn frames from the live app: Near fall lesson is two illustrated steps until a reviewed near-fall picture exists, and the near-fall Make the Call question is parked with it. iOS: `user-select:none` and `touch-action:manipulation` on controls. `ui-smoke.mjs` now requires an illustration on every frame (G2).
 
 Pending (tomorrow, free credits): takedown finish, active top control (red and mirrored green) and near fall pictures, reviewed under G3-G5, replacing the referee's-position reuse in Control step 3, Takedown step 5, Escape/Reversal/Near fall step 1 and Score a Match.
+
+## 2026-10-23 Lesson flows round 1: five new reviewed pictures
+
+Following docs/SME-PLAYBOOK.md (rules, pictures, copy, layout, tests) and docs/lesson-flows.md.
+
+- Generated 7 Scenario jobs before the free plan limit; 5 passed the G3 full-size review (TAKEDOWN_CONTROL, REF_POSITION_RED_TOP fix, NEAR_FALL_EXPOSURE, SIT_OUT_TIGHT, TURN_IN), 1 rejected (HALF_NELSON: arm over the shoulder, not under the arm), 5 still to generate (TOP_RIDE, TOP_RIDE_GREEN, LEVEL_CHANGE, CLEAR_HANDS, REVERSAL_CONTROL). Review notes per picture in docs/lesson-flows.md.
+- The referee's-position picture is no longer reused for control or takedown anywhere. CONTROL_RED and SIT_OUT art deleted.
+- Lesson changes: Control and Takedown finish on the real cover. Pin starts from back exposure (one shoulder up, not a pin). Reversal is now 4 steps (referee's position, sit-out with Red still holding the waist, turn-in with nobody on top, Green in control). Near fall is 3 steps (control, half nelson exposure with the referee counting and nothing scored yet, back to belly and points). Fall and technical fall use the cover picture.
+- Make the Call: 9 questions. Added sit-out with grip kept (no points) and half nelson to exposure (keep counting). Pin question now starts from the exposure.
+- Score a Match: red control shows the cover, the near-fall count shows the exposure.
+- scene.js: a pose that has reviewed art no longer needs a rig definition.
+- Tests: npm test green; ui-smoke extended (9 questions, nothing scored during the count, exposure picture on the count frames, reversal scores only at step 4, retired art files must 404).
+- Known interim: CONTROL_GREEN (mirrored old referee's position) still stands for Green in control until REVERSAL_CONTROL / TOP_RIDE_GREEN pass review.
