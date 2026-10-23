@@ -70,9 +70,9 @@ function shadow(pose){
 export function renderStage(svg,frame){
   while(svg.firstChild)svg.removeChild(svg.firstChild);
   const pose=POSES[frame.pose];
-  if(!pose)throw new Error("Unknown pose "+frame.pose);
-  svg.appendChild(defs());
   const art=ART[frame.pose];
+  if(!pose&&!art)throw new Error("Unknown pose "+frame.pose);
+  svg.appendChild(defs());
   if(art){
     svg.appendChild(el("image",{href:art.src,x:0,y:0,width:900,height:500,preserveAspectRatio:"xMidYMid slice"}));
     tag(svg,art.red,WRESTLERS.red);tag(svg,art.green,WRESTLERS.green);

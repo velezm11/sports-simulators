@@ -45,7 +45,15 @@ ok((await text("#redScore"))==="3","takedown lesson scoreboard red 3, got "+awai
 await evalJs(`location.hash='#learn/fall/2'`);await sleep(300);
 ok((await text("#greenScore"))==="6"&&(await text("#lastCall")).includes("FALL"),"fall lesson preset 0-6 and fall shown");
 await evalJs(`location.hash='#learn/nearfall/2'`);await sleep(300);
+ok((await text("#redScore"))==="0","near fall lesson: nothing scored while the ref counts, got "+await text("#redScore"));
+ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).includes("NEAR_FALL_EXPOSURE"),"near fall count frame shows the exposure picture");
+await evalJs(`location.hash='#learn/nearfall/3'`);await sleep(300);
 ok((await text("#redScore"))==="2","near fall lesson awards 2 for a 2 count, got "+await text("#redScore"));
+await evalJs(`location.hash='#learn/reversal/4'`);await sleep(300);
+ok((await text("#greenScore"))==="2"&&(await text("#redScore"))==="0","reversal lesson awards 2 to green only at step 4");
+// retired pictures must not be referenced anywhere
+const retired=await evalJs(`(async()=>{const r=[];for(const n of ["CONTROL_RED","SIT_OUT"]){const res=await fetch("art/poses/"+n+".jpg");if(res.ok)r.push(n);}return r;})()`);
+ok(retired.length===0,"retired art files still served: "+retired.join(","));
 
 // Practice: every choice on every task
 ok(await click('.mode[data-mode="practice"]')==="ok","practice tab");
@@ -59,7 +67,9 @@ for(let t=0;t<5;t++){
 }
 // Make the Call: play, answer each option id across questions, next
 ok(await click('.mode[data-mode="call"]')==="ok","call tab");
-for(let q=0;q<7;q++){
+const nq=parseInt((await text("#stageEyebrow")).match(/of (\d+)/)[1]);
+ok(nq===9,"9 Make the Call questions, got "+nq);
+for(let q=0;q<nq;q++){
   ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).length>0,"illustrated before-frame q"+q);
   ok(await click("#frames .nav-btn")==="ok","Play the action q"+q);
   ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).length>0,"illustrated after-frame q"+q);
@@ -77,6 +87,7 @@ await evalJs(`[...document.querySelectorAll('.big')].find(b=>b.textContent.inclu
 ok((await text("#redScore"))==="3","red takedown 3");
 await evalJs(`[...document.querySelectorAll('.big')].find(b=>b.textContent.includes('Near fall')).click()`);
 ok((await count(".big"))===4,"4 count choices");
+ok((await evalJs(`document.querySelector('#stage image')?.getAttribute('href')||''`)).includes("NEAR_FALL_EXPOSURE"),"match near fall count shows the exposure picture");
 await evalJs(`[...document.querySelectorAll('.big')].find(b=>b.textContent.includes('Under 2')).click()`);
 ok((await text("#redScore"))==="3","under 2 seconds awards nothing");
 await evalJs(`[...document.querySelectorAll('.big')].find(b=>b.textContent.includes('Near fall')).click()`);

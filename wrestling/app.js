@@ -9,7 +9,7 @@ const $$=s=>[...document.querySelectorAll(s)];
 const S=RULESET.scoring;
 const STATE_META={
   neutral:{cls:"neutral",label:"NEUTRAL",hint:"Nobody has control",pose:"NEUTRAL",controller:null},
-  "red-control":{cls:"red",label:"RED CONTROL",hint:"Red is on top",pose:"CONTROL_RED",controller:"red"},
+  "red-control":{cls:"red",label:"RED CONTROL",hint:"Red is on top",pose:"TAKEDOWN_CONTROL",controller:"red"},
   "green-control":{cls:"green",label:"GREEN CONTROL",hint:"Green is on top",pose:"CONTROL_GREEN",controller:"green"}
 };
 const CALL_LABEL={takedown:"Takedown",escape:"Escape",reversal:"Reversal","near fall":"Near fall",fall:"Fall"};
@@ -160,7 +160,7 @@ function renderLearn(){
     render();
   });
   nav.appendChild(prev);nav.appendChild(next);frames.appendChild(nav);
-  renderHappening(f,(f.controller?STATE_KID[f.state]:STATE_KID.neutral)+(scored?" <b>+"+scored+" for "+(f.score?f.score.wrestler:f.nearFall.wrestler).toUpperCase()+"!</b>":f.ends?" <b>Match over!</b>":""));
+  renderHappening(f,(f.happening||(f.controller?STATE_KID[f.state]:STATE_KID.neutral))+(scored?" <b>+"+scored+" for "+(f.score?f.score.wrestler:f.nearFall.wrestler).toUpperCase()+"!</b>":f.ends?" <b>Match over!</b>":""));
   $("#actions").innerHTML="";
   if(lastFrame){progress.lessons[l.id]=true;saveProgress();}
   if(scored)feedback((f.score?f.score.wrestler:f.nearFall.wrestler).toUpperCase()+" scores "+scored,f.coach,"score");
@@ -279,7 +279,7 @@ let nfPending=false;
 function renderMatch(){
   head("Score a Match","Rule-driven scorer","Every point comes from the rules engine. No free buttons.");
   const m=STATE_META[match.state];
-  const poseName=nfPending&&m.controller==="red"?"REF_POSITION_RED_TOP":m.pose;
+  const poseName=nfPending&&m.controller==="red"?"NEAR_FALL_EXPOSURE":m.pose;
   const mirrored=false;
   stage({pose:poseName,controller:m.controller,badge:match.ended?(match.ended.reason==="fall"?"FALL":"TECHNICAL FALL"):nfPending?"NEAR FALL COUNT":undefined,badgeTone:match.ended?"score":nfPending?"warn":undefined},"Match position: "+m.label.toLowerCase());
   setStateChip(match.state);setSignal(match.ended?"Stopping the match (signal 2)":nfPending?"Near fall (signal 21)":m.controller?"Wrestler in control (signal 11)":"Neutral position (signal 8)");

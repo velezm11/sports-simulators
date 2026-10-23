@@ -48,4 +48,4 @@ Serve the repository root with any static HTTP server and open `/wrestling/`.
 
 ## Art
 
-`art/poses/*.jpg` are full-stage illustrations of the two wrestlers (red and green) generated with Scenario (GPT Image 2.5 Flare) from written position descriptions, then checked against the rig pose sheet for a plausible wrestling position before being listed in `ui/art.js`. Any pose without an entry there (currently `NEAR_FALL`) renders through the rig. Regenerate a pose by editing the prompt in BUILD-LOG, reviewing the result, and adding its anchors to `ui/art.js`.
+`art/poses/*.jpg` are full-stage illustrations of the two wrestlers (red and green) generated with Scenario (GPT Image 2.5 Flare) from written position descriptions, then checked against the rig pose sheet for a plausible wrestling position before being listed in `ui/art.js`. Every pose used by a live lesson must have an entry there; the rig renderer is a development fallback only (playbook gate G2). Position descriptions and review status live in `docs/lesson-flows.md`. Regenerate a pose by editing the prompt in BUILD-LOG, reviewing the result, and adding its anchors to `ui/art.js`.
